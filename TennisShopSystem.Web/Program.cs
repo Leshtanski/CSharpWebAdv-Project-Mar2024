@@ -4,6 +4,8 @@ namespace TennisShopSystem.Web
     
     using TennisShopSystem.Data;
     using TennisShopSystem.Data.Models;
+    using TennisShopSystem.Services.Data.Interfaces;
+    using TennisShopSystem.Web.Infrastructure.Extensions;
 
     public class Program
     {
@@ -25,6 +27,8 @@ namespace TennisShopSystem.Web
                 options.Password.RequiredLength = builder.Configuration.GetValue<int>("Identity:Password:RequiredLength");
             })
                 .AddEntityFrameworkStores<TennisShopDbContext>();
+
+            builder.Services.AddApplicationServices(typeof(IProductService));
             
             builder.Services.AddControllersWithViews();
 
