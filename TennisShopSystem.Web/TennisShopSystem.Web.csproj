@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-TennisShopSystem.Web-e0417243-6edb-4d97-874e-85e14f592128</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.27" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.27" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TennisShopSystem.Common\TennisShopSystem.Common.csproj" />
+    <ProjectReference Include="..\TennisShopSystem.Data.Models\TennisShopSystem.Data.Models.csproj" />
+    <ProjectReference Include="..\TennisShopSystem.Data\TennisShopSystem.Data.csproj" />
+    <ProjectReference Include="..\TennisShopSystem.Web.ViewModels\TennisShopSystem.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>
