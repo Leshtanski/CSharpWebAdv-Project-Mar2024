@@ -1,6 +1,7 @@
 ﻿namespace TennisShopSystem.Web.ViewModels.Product
 {
     using System.ComponentModel.DataAnnotations;
+    using TennisShopSystem.Web.ViewModels.Brand;
     using TennisShopSystem.Web.ViewModels.Category;
 
     using static TennisShopSystem.Common.EntityValidationConstants.Product;
@@ -30,7 +31,11 @@
         [Display(Name = "Price Per Item")]
         public decimal Price { get; set; }
 
+        public int BrandId { get; set; }
+
         public int CategoryId { get; set; }
+
+        public IEnumerable<ProductSelectBrandFormModel> Brands { get; set; }
 
         public IEnumerable<ProductSelectCategoryFormModel> Categories { get; set; }
     }
