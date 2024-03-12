@@ -28,5 +28,14 @@
 
             return allBrands;
         }
+
+        public async Task<bool> ExistsByIdAsync(int id)
+        {
+            bool result = await this.dbContext
+                .Brands
+                .AnyAsync(c => c.Id == id);
+
+            return result;
+        }
     }
 }

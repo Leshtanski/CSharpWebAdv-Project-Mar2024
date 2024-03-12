@@ -4,6 +4,8 @@
 
     public interface IBrandService
     {
-        public Task<IEnumerable<ProductSelectBrandFormModel>> AllBrandsAsync();
+        Task<IEnumerable<ProductSelectBrandFormModel>> AllBrandsAsync();
+
+        Task<bool> ExistsByIdAsync(int id);
     }
 }

@@ -6,6 +6,7 @@ namespace TennisShopSystem.Web
     using TennisShopSystem.Data.Models;
     using TennisShopSystem.Services.Data.Interfaces;
     using TennisShopSystem.Web.Infrastructure.Extensions;
+    using TennisShopSystem.Web.Infrastructure.ModelBinders;
 
     public class Program
     {
@@ -30,7 +31,12 @@ namespace TennisShopSystem.Web
 
             builder.Services.AddApplicationServices(typeof(IProductService));
             
-            builder.Services.AddControllersWithViews();
+            builder.Services
+                .AddControllersWithViews()
+                .AddMvcOptions(options =>
+                {
+                    options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
+                });
 
             WebApplication app = builder.Build();
 
