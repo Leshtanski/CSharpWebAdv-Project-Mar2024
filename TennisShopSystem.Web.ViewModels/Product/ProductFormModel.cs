@@ -10,6 +10,7 @@
     {
         public ProductFormModel()
         {
+            this.Brands = new HashSet<ProductSelectBrandFormModel>();
             this.Categories = new HashSet<ProductSelectCategoryFormModel>();
         }
 
