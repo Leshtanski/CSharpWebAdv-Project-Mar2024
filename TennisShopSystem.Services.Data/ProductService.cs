@@ -4,7 +4,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using TennisShopSystem.Data;
     using TennisShopSystem.Data.Models;
@@ -13,6 +12,8 @@
     using TennisShopSystem.Web.ViewModels.Home;
     using TennisShopSystem.Web.ViewModels.Product;
     using TennisShopSystem.Web.ViewModels.Product.Enums;
+
+    //using Product = TennisShopSystem.Data.Models.Product;
 
     public class ProductService : IProductService
     {
@@ -80,6 +81,42 @@
                 TotalProductsCount = totalProducts,
                 Products = allProducts
             };
+        }
+
+        public async Task<IEnumerable<ProductAllViewModel>> AllBySellerIdAsync(string sellerId)
+        {
+            IEnumerable<ProductAllViewModel> allSellerProducts = await this.dbContext
+                .Products
+                .Where(p => p.SellerId.ToString() == sellerId)
+                .Select(p => new ProductAllViewModel
+                {
+                    Id = p.Id.ToString(),
+                    Title = p.Title,
+                    Description = p.Description,
+                    ImageUrl = p.ImageUrl,
+                    Price = p.Price
+                })
+                .ToArrayAsync();
+
+            return allSellerProducts;
+        }
+
+        public async Task<IEnumerable<ProductAllViewModel>> AllByUserIdAsync(string userId)
+        {
+            IEnumerable<ProductAllViewModel> allUserProducts = await this.dbContext
+                .Products
+                .Where(p => p.BuyerId.HasValue && p.BuyerId.ToString() == userId)
+                .Select(p => new ProductAllViewModel
+                {
+                    Id = p.Id.ToString(),
+                    Title = p.Title,
+                    Description = p.Description,
+                    ImageUrl = p.ImageUrl,
+                    Price = p.Price
+                })
+                .ToArrayAsync();
+
+            return allUserProducts;
         }
 
         public async Task CreateAsync(ProductFormModel formModel, string sellerId)

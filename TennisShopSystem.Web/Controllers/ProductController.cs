@@ -117,5 +117,29 @@
 
             return RedirectToAction("All", "Product");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Mine()
+        {
+            List<ProductAllViewModel> myProducts = new List<ProductAllViewModel>();
+
+            string userId = this.User.GetId()!;
+
+            bool isSeller = await this.sellerService
+                .SellerExistByUserIdAsync(userId);
+
+            if (isSeller)
+            {
+                string? sellerId = await this.sellerService.GetSellerIdByUserIdAsync(userId);
+
+                myProducts.AddRange(await this.productService.AllBySellerIdAsync(sellerId!));
+            }
+            else
+            {
+                myProducts.AddRange(await this.productService.AllByUserIdAsync(userId));
+            }
+
+            return this.View(myProducts);
+        }
     }
 }

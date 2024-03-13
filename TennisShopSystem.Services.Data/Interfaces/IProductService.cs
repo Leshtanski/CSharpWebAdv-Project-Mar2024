@@ -16,5 +16,9 @@
         Task CreateAsync(ProductFormModel formModel, string sellerId);
 
         Task<AllProductsFilteredAndPagedServiceModel> AllAsync(AllProductQueryModel queryModel);
+
+        Task<IEnumerable<ProductAllViewModel>> AllBySellerIdAsync(string sellerId);
+
+        Task<IEnumerable<ProductAllViewModel>> AllByUserIdAsync(string userId);
     }
 }
