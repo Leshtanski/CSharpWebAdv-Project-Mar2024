@@ -3,6 +3,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using TennisShopSystem.Services.Data.Interfaces;
+    using TennisShopSystem.Services.Data.Models.Product;
     using TennisShopSystem.Web.Infrastructure.Extensions;
     using TennisShopSystem.Web.ViewModels.Product;
 
@@ -25,10 +26,18 @@
 
         }
 
+        [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery]AllProductQueryModel queryModel)
         {
-            return this.Ok();
+            AllProductsFilteredAndPagedServiceModel serviceModel = await this.productService.AllAsync(queryModel);
+            
+            queryModel.Products = serviceModel.Products;
+            queryModel.TotalProducts = serviceModel.TotalProductsCount;
+            queryModel.Categories = await this.categoryService.AllCategoryNamesAsync();
+            queryModel.Brands = await this.brandService.AllBrandNamesAsync();
+
+            return this.View(queryModel);
         }
 
         [HttpGet]

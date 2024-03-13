@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using TennisShopSystem.Services.Data.Models.Product;
     using TennisShopSystem.Web.ViewModels.Home;
     using TennisShopSystem.Web.ViewModels.Product;
 
@@ -13,5 +14,7 @@
         Task<IEnumerable<IndexViewModel>> LastThreeProductsAsync();
 
         Task CreateAsync(ProductFormModel formModel, string sellerId);
+
+        Task<AllProductsFilteredAndPagedServiceModel> AllAsync(AllProductQueryModel queryModel);
     }
 }

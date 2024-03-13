@@ -7,5 +7,7 @@
         Task<IEnumerable<ProductSelectBrandFormModel>> AllBrandsAsync();
 
         Task<bool> ExistsByIdAsync(int id);
+
+        Task<IEnumerable<string>> AllBrandNamesAsync();
     }
 }

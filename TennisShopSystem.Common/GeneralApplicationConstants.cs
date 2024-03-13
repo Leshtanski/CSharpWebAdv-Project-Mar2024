@@ -1,6 +1,6 @@
 ﻿namespace TennisShopSystem.Common
 {
-    public static class GeneralAppicationConstants
+    public static class GeneralApplicationConstants
     {
         public const int ReleaseYear = 2023;
 

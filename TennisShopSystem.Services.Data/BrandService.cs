@@ -14,6 +14,16 @@
             this.dbContext = dbContext;
         }
 
+        public async Task<IEnumerable<string>> AllBrandNamesAsync()
+        {
+            IEnumerable<string> allBrandNames = await this.dbContext
+                .Brands
+                .Select(b => b.Name)
+                .ToArrayAsync();
+
+            return allBrandNames;
+        }
+
         public async Task<IEnumerable<ProductSelectBrandFormModel>> AllBrandsAsync()
         {
             IEnumerable<ProductSelectBrandFormModel> allBrands = await this.dbContext

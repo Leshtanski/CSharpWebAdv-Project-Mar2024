@@ -3,7 +3,7 @@
     using System.ComponentModel.DataAnnotations;
     using TennisShopSystem.Web.ViewModels.Product.Enums;
 
-    using static TennisShopSystem.Common.GeneralAppicationConstants;
+    using static TennisShopSystem.Common.GeneralApplicationConstants;
 
     public class AllProductQueryModel
     {
@@ -29,6 +29,7 @@
 
         public int CurrentPage { get; set; }
 
+        [Display(Name = "Show Products Per Page")]
         public int ProductsPerPage { get; set; }
 
         public int TotalProducts { get; set; }
