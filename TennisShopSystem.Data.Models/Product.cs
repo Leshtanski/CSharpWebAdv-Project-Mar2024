@@ -30,6 +30,9 @@
 
         public DateTime CreatedOn { get; set; }
 
+        // TODO: Quantity in addition to SOFT DELETE
+        public bool IsAvailable { get; set; }
+
         public int CategoryId { get; set; }
 
         public virtual Category Category { get; set; } = null!;

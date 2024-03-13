@@ -60,6 +60,7 @@
             };
 
             IEnumerable<ProductAllViewModel> allProducts = await productsQuery
+                .Where(p => p.IsAvailable)
                 .Skip((queryModel.CurrentPage - 1) * queryModel.ProductsPerPage)
                 .Take(queryModel.ProductsPerPage)
                 .Select(p => new ProductAllViewModel
@@ -102,6 +103,7 @@
         {
             IEnumerable<IndexViewModel> lastThreeProducts = await dbContext
                 .Products
+                .Where(p => p.IsAvailable)
                 .OrderByDescending(p => p.CreatedOn)
                 .Take(3)
                 .Select(p => new IndexViewModel()

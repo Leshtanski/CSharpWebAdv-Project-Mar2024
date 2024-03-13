@@ -14,6 +14,10 @@
                 .HasDefaultValueSql("GETDATE()");
 
             builder
+                .Property(p => p.IsAvailable)
+                .HasDefaultValue(true);
+
+            builder
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId)
