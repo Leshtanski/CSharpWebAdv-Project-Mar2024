@@ -52,11 +52,11 @@
 
             productsQuery = queryModel.ProductSorting switch
             {
-                ProductSorting.Newest => productsQuery.OrderBy(p => p.CreatedOn),
-                ProductSorting.Oldest => productsQuery.OrderByDescending(p => p.CreatedOn),
+                ProductSorting.Newest => productsQuery.OrderByDescending(p => p.CreatedOn),
+                ProductSorting.Oldest => productsQuery.OrderBy(p => p.CreatedOn),
                 ProductSorting.PriceAscending => productsQuery.OrderBy(p => p.Price),
                 ProductSorting.PriceDescending => productsQuery.OrderByDescending(p => p.Price),
-                _ => productsQuery.OrderBy(p => p.CreatedOn)
+                _ => productsQuery.OrderByDescending(p => p.CreatedOn)
             };
 
             IEnumerable<ProductAllViewModel> allProducts = await productsQuery
