@@ -13,7 +13,7 @@
     {
         Task<IEnumerable<IndexViewModel>> LastThreeProductsAsync();
 
-        Task CreateAsync(ProductFormModel formModel, string sellerId);
+        Task<string> CreateAndReturnIdAsync(ProductFormModel formModel, string sellerId);
 
         Task<AllProductsFilteredAndPagedServiceModel> AllAsync(AllProductQueryModel queryModel);
 

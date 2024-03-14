@@ -109,7 +109,9 @@
                 string? sellerId = await this.sellerService
                     .GetSellerIdByUserIdAsync(this.User.GetId()!);
 
-                await this.productService.CreateAsync(model, sellerId!);
+                string productId = await this.productService.CreateAndReturnIdAsync(model, sellerId!);
+
+                return RedirectToAction("Details", "Product", new { id= productId });
             }
             catch (Exception)
             {
@@ -121,8 +123,6 @@
 
                 return this.View(model);
             }
-
-            return RedirectToAction("All", "Product");
         }
 
         [HttpGet]

@@ -123,7 +123,7 @@
             return allUserProducts;
         }
 
-        public async Task CreateAsync(ProductFormModel formModel, string sellerId)
+        public async Task<string> CreateAndReturnIdAsync(ProductFormModel formModel, string sellerId)
         {
             Product newProduct = new Product()
             {
@@ -138,6 +138,8 @@
 
             await this.dbContext.Products.AddAsync(newProduct);
             await this.dbContext.SaveChangesAsync();
+
+            return newProduct.Id.ToString();
         }
 
         public async Task EditProductByIdAndFormModel(string productId, ProductFormModel formModel)
