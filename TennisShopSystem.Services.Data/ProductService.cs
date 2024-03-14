@@ -140,6 +140,23 @@
             await this.dbContext.SaveChangesAsync();
         }
 
+        public async Task EditProductByIdAndFormModel(string productId, ProductFormModel formModel)
+        {
+            Product product = await this.dbContext
+                .Products
+                .Where(p => p.IsAvailable)
+                .FirstAsync(p => p.Id.ToString() == productId);
+
+            product.Title = formModel.Title;
+            product.Description = formModel.Description;
+            product.ImageUrl = formModel.ImageUrl;
+            product.Price = formModel.Price;
+            product.CategoryId = formModel.CategoryId;
+            product.BrandId = formModel.BrandId;
+
+            await this.dbContext.SaveChangesAsync();
+        }
+
         public async Task<bool> ExistsByIdAsync(string productId)
         {
             bool result = await this.dbContext
@@ -196,6 +213,16 @@
                 CategoryId = product.CategoryId,
                 BrandId = product.BrandId
             };
+        }
+
+        public async Task<bool> IsSellerWithIdOwnerOfProductWithIdAsync(string productId, string sellerId)
+        {
+            Product product = await this.dbContext
+                .Products
+                .Where(p => p.IsAvailable)
+                .FirstAsync(p => p.Id.ToString() == productId);
+
+            return product.SellerId.ToString() == sellerId;
         }
 
         public async Task<IEnumerable<IndexViewModel>> LastThreeProductsAsync()

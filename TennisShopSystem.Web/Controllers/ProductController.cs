@@ -52,13 +52,20 @@
                 return this.RedirectToAction("Become", "Seller");
             }
 
-            ProductFormModel model = new()
+            try
             {
-                Brands = await this.brandService.AllBrandsAsync(),
-                Categories = await this.categoryService.AllCategoriesAsync()
-            };
+                ProductFormModel model = new()
+                {
+                    Brands = await this.brandService.AllBrandsAsync(),
+                    Categories = await this.categoryService.AllCategoriesAsync()
+                };
 
-            return View(model);
+                return View(model);
+            }
+            catch (Exception)
+            {
+                return this.GeneralError();
+            }
         }
 
         [HttpPost]
@@ -104,7 +111,7 @@
 
                 await this.productService.CreateAsync(model, sellerId!);
             }
-            catch (Exception _)
+            catch (Exception)
             {
                 ModelState.AddModelError(string.Empty, 
                     "Unexpected error occurred while trying to add your new product! Please try again later or contact administrator!");
@@ -132,22 +139,128 @@
                 return RedirectToAction("All", "Product");
             }
 
-            ProductDetailsViewModel viewModel = await this.productService
+            try
+            {
+                ProductDetailsViewModel viewModel = await this.productService
                 .GetDetailsByIdAsync(id);
 
-            return View(viewModel);
+                return View(viewModel);
+            }
+            catch (Exception)
+            {
+                return this.GeneralError();
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
+            bool productExists = await this.productService
+                .ExistsByIdAsync(id);
 
+            if (!productExists)
+            {
+                this.TempData[ErrorMessage] = "Product with the provided id does not exist!";
+
+                return RedirectToAction("All", "Product");
+            }
+
+            bool isUserSeller = await this.sellerService
+                .SellerExistByUserIdAsync(this.User.GetId()!);
+
+            if (!isUserSeller)
+            {
+                this.TempData[ErrorMessage] = "You must become a seller in order to edit product info!";
+
+                this.RedirectToAction("Become", "Seller");
+            }
+
+            string? sellerId = await this.sellerService.GetSellerIdByUserIdAsync(this.User.GetId()!);
+
+            bool isSellerOwner = await this.productService
+                .IsSellerWithIdOwnerOfProductWithIdAsync(id, sellerId!);
+
+            if (!isSellerOwner) 
+            {
+                this.TempData[ErrorMessage] = "You must be the seller of the product you want to edit!";
+
+                return this.RedirectToAction("Mine", "Product");
+            }
+
+            try
+            {
+                ProductFormModel formModel = await this.productService
+                .GetProductForEditByIdAsync(id);
+
+                formModel.Categories = await this.categoryService.AllCategoriesAsync();
+                formModel.Brands = await this.brandService.AllBrandsAsync();
+
+                return this.View(formModel);
+            }
+            catch (Exception)
+            {
+                return this.GeneralError();
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(string id, ProductFormModel model)
         {
+            if (!this.ModelState.IsValid)
+            {
+                model.Categories = await this.categoryService.AllCategoriesAsync();
+                model.Brands = await this.brandService.AllBrandsAsync();
 
+                return this.View(model);
+            }
+
+            bool productExists = await this.productService
+                .ExistsByIdAsync(id);
+
+            if (!productExists)
+            {
+                this.TempData[ErrorMessage] = "Product with the provided id does not exist!";
+
+                return RedirectToAction("All", "Product");
+            }
+
+            bool isUserSeller = await this.sellerService
+                .SellerExistByUserIdAsync(this.User.GetId()!);
+
+            if (!isUserSeller)
+            {
+                this.TempData[ErrorMessage] = "You must become a seller in order to edit product info!";
+
+                this.RedirectToAction("Become", "Seller");
+            }
+
+            string? sellerId = await this.sellerService.GetSellerIdByUserIdAsync(this.User.GetId()!);
+
+            bool isSellerOwner = await this.productService
+                .IsSellerWithIdOwnerOfProductWithIdAsync(id, sellerId!);
+
+            if (!isSellerOwner)
+            {
+                this.TempData[ErrorMessage] = "You must be the seller of the product you want to edit!";
+
+                return this.RedirectToAction("Mine", "Product");
+            }
+
+            try
+            {
+                await this.productService.EditProductByIdAndFormModel(id, model);
+            }
+            catch (Exception)
+            {
+                this.ModelState.AddModelError(string.Empty, "An unexpected error occurred while trying to update your product! Please try again later or contact administrator!");
+                
+                model.Categories = await this.categoryService.AllCategoriesAsync();
+                model.Brands = await this.brandService.AllBrandsAsync();
+
+                return this.View(model);
+            }
+
+            return RedirectToAction("Details", "Product", new { id });
         }
 
         [HttpGet]
@@ -160,18 +273,32 @@
             bool isSeller = await this.sellerService
                 .SellerExistByUserIdAsync(userId);
 
-            if (isSeller)
+            try
             {
-                string? sellerId = await this.sellerService.GetSellerIdByUserIdAsync(userId);
+                if (isSeller)
+                {
+                    string? sellerId = await this.sellerService.GetSellerIdByUserIdAsync(userId);
 
-                myProducts.AddRange(await this.productService.AllBySellerIdAsync(sellerId!));
+                    myProducts.AddRange(await this.productService.AllBySellerIdAsync(sellerId!));
+                }
+                else
+                {
+                    myProducts.AddRange(await this.productService.AllByUserIdAsync(userId));
+                }
+
+                return this.View(myProducts);
             }
-            else
+            catch (Exception)
             {
-                myProducts.AddRange(await this.productService.AllByUserIdAsync(userId));
+                return this.GeneralError();
             }
+        }
 
-            return this.View(myProducts);
+        private IActionResult GeneralError()
+        {
+            this.TempData[ErrorMessage] = "An unexpected error occurred! Please try again later or contact administrator!";
+
+            return this.RedirectToAction("Index", "Home");
         }
     }
 }

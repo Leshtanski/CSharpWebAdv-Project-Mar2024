@@ -26,5 +26,9 @@
         Task<ProductDetailsViewModel> GetDetailsByIdAsync(string productId);
 
         Task<ProductFormModel> GetProductForEditByIdAsync(string productId);
+
+        Task<bool> IsSellerWithIdOwnerOfProductWithIdAsync(string productId, string sellerId);
+
+        Task EditProductByIdAndFormModel(string productId, ProductFormModel formModel);
     }
 }
