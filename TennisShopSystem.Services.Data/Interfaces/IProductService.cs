@@ -21,6 +21,10 @@
 
         Task<IEnumerable<ProductAllViewModel>> AllByUserIdAsync(string userId);
 
-        Task<ProductDetailsViewModel?> GetDetailsByIdAsync(string productId);
+        Task<bool> ExistsByIdAsync(string productId);
+
+        Task<ProductDetailsViewModel> GetDetailsByIdAsync(string productId);
+
+        Task<ProductFormModel> GetProductForEditByIdAsync(string productId);
     }
 }

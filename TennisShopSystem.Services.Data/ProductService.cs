@@ -140,21 +140,26 @@
             await this.dbContext.SaveChangesAsync();
         }
 
-        public async Task<ProductDetailsViewModel?> GetDetailsByIdAsync(string productId)
+        public async Task<bool> ExistsByIdAsync(string productId)
         {
-            Product? product = await this.dbContext
+            bool result = await this.dbContext
+                .Products
+                .Where(p => p.IsAvailable)
+                .AnyAsync(p => p.Id.ToString() == productId);
+
+            return result;
+        }
+
+        public async Task<ProductDetailsViewModel> GetDetailsByIdAsync(string productId)
+        {
+            Product product = await this.dbContext
                 .Products
                 .Include(p => p.Category)
                 .Include(p => p.Brand)
                 .Include(p => p.Seller)
                 .ThenInclude(s => s.User)
                 .Where(p => p.IsAvailable)
-                .FirstOrDefaultAsync(p => p.Id.ToString() == productId);
-
-            if (product == null)
-            {
-                return null;
-            }
+                .FirstAsync(p => p.Id.ToString() == productId);
 
             return new ProductDetailsViewModel()
             {
@@ -170,6 +175,26 @@
                     Email = product.Seller.User.Email,
                     PhoneNumber = product.Seller.PhoneNumber
                 }
+            };
+        }
+
+        public async Task<ProductFormModel> GetProductForEditByIdAsync(string productId)
+        {
+            Product product = await this.dbContext
+                .Products
+                .Include(p => p.Category)
+                .Include(p => p.Brand)
+                .Where(p => p.IsAvailable)
+                .FirstAsync(p => p.Id.ToString() == productId);
+
+            return new ProductFormModel()
+            {
+                Title = product.Title,
+                Description = product.Description,
+                ImageUrl = product.ImageUrl,
+                Price = product.Price,
+                CategoryId = product.CategoryId,
+                BrandId = product.BrandId
             };
         }
 
