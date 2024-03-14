@@ -111,6 +111,8 @@
 
                 string productId = await this.productService.CreateAndReturnIdAsync(model, sellerId!);
 
+                this.TempData[SuccessMessage] = "Product was added successfully!";
+
                 return RedirectToAction("Details", "Product", new { id= productId });
             }
             catch (Exception)
@@ -259,6 +261,8 @@
 
                 return this.View(model);
             }
+
+            this.TempData[SuccessMessage] = "Product was edited successfully!";
 
             return RedirectToAction("Details", "Product", new { id });
         }
