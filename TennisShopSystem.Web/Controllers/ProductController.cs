@@ -119,6 +119,23 @@
         }
 
         [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(string id)
+        {
+            ProductDetailsViewModel? viewModel = await this.productService
+                .GetDetailsByIdAsync(id);
+
+            if (viewModel == null)
+            {
+                this.TempData[ErrorMessage] = "Product with the provided id does not exist!";
+
+                return RedirectToAction("All", "Product");
+            }
+
+            return View(viewModel);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Mine()
         {
             List<ProductAllViewModel> myProducts = new List<ProductAllViewModel>();

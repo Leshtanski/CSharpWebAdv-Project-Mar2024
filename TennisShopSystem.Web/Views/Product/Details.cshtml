@@ -1,0 +1,40 @@
+﻿@model ProductDetailsViewModel
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+<h2 class="text-center">@ViewData["Title"]</h2>
+<hr />
+
+<div class="container" style="display:inline">
+    <div class="row">
+        <div class="col-4">
+            <img class="card-img-top" style="width: 20rem;" src="@Model.ImageUrl" alt="Product Image">
+        </div>
+        <div class="card col-8 border-0">
+            <p style="font-size:25px;"><u>@Model.Title</u></p>
+            <p>
+                Price Per Item:
+                <b>BGN @($"{Model.Price:f2}")</b>
+            </p>
+            <p>@Model.Description</p>
+            <p>Category: <b>@Model.Category</b></p>
+            <p>Brand: <b>@Model.Brand</b></p>
+            <div class="form-inline">
+                @if (this.User.Identity?.IsAuthenticated ?? false)
+                {
+                    <a class="btn btn-warning" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                    <a class="ml-2 btn btn-danger" asp-controller="Product" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                }
+            </div>
+            <p></p>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Agent Info</h5>
+                    <p class="card-text">Email: @Model.Seller.Email</p>
+                    <p class="card-text">Phone Number: @Model.Seller.PhoneNumber</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

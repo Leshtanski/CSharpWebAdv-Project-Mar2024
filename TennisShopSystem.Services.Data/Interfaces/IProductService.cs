@@ -20,5 +20,7 @@
         Task<IEnumerable<ProductAllViewModel>> AllBySellerIdAsync(string sellerId);
 
         Task<IEnumerable<ProductAllViewModel>> AllByUserIdAsync(string userId);
+
+        Task<ProductDetailsViewModel?> GetDetailsByIdAsync(string productId);
     }
 }

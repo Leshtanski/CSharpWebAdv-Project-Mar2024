@@ -12,6 +12,7 @@
     using TennisShopSystem.Web.ViewModels.Home;
     using TennisShopSystem.Web.ViewModels.Product;
     using TennisShopSystem.Web.ViewModels.Product.Enums;
+    using TennisShopSystem.Web.ViewModels.Seller;
 
     //using Product = TennisShopSystem.Data.Models.Product;
 
@@ -87,7 +88,8 @@
         {
             IEnumerable<ProductAllViewModel> allSellerProducts = await this.dbContext
                 .Products
-                .Where(p => p.SellerId.ToString() == sellerId)
+                .Where(p => p.IsAvailable &&
+                            p.SellerId.ToString() == sellerId)
                 .Select(p => new ProductAllViewModel
                 {
                     Id = p.Id.ToString(),
@@ -105,7 +107,9 @@
         {
             IEnumerable<ProductAllViewModel> allUserProducts = await this.dbContext
                 .Products
-                .Where(p => p.BuyerId.HasValue && p.BuyerId.ToString() == userId)
+                .Where(p => p.IsAvailable &&
+                            p.BuyerId.HasValue &&
+                            p.BuyerId.ToString() == userId)
                 .Select(p => new ProductAllViewModel
                 {
                     Id = p.Id.ToString(),
@@ -134,6 +138,39 @@
 
             await this.dbContext.Products.AddAsync(newProduct);
             await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task<ProductDetailsViewModel?> GetDetailsByIdAsync(string productId)
+        {
+            Product? product = await this.dbContext
+                .Products
+                .Include(p => p.Category)
+                .Include(p => p.Brand)
+                .Include(p => p.Seller)
+                .ThenInclude(s => s.User)
+                .Where(p => p.IsAvailable)
+                .FirstOrDefaultAsync(p => p.Id.ToString() == productId);
+
+            if (product == null)
+            {
+                return null;
+            }
+
+            return new ProductDetailsViewModel()
+            {
+                Id = product.Id.ToString(),
+                Title = product.Title,
+                Description = product.Description,
+                ImageUrl = product.ImageUrl,
+                Price = product.Price,
+                Brand = product.Brand.Name,
+                Category = product.Category.Name,
+                Seller = new SellerInfoOnProductViewModel()
+                {
+                    Email = product.Seller.User.Email,
+                    PhoneNumber = product.Seller.PhoneNumber
+                }
+            };
         }
 
         public async Task<IEnumerable<IndexViewModel>> LastThreeProductsAsync()
