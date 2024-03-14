@@ -29,6 +29,10 @@
 
         Task<bool> IsSellerWithIdOwnerOfProductWithIdAsync(string productId, string sellerId);
 
-        Task EditProductByIdAndFormModel(string productId, ProductFormModel formModel);
+        Task EditProductByIdAndFormModelAsync(string productId, ProductFormModel formModel);
+
+        Task<ProductPreDeleteDetailsViewModel> GetProductForDeleteByIdAsync(string productId);
+
+        Task DeleteProductByIdAsync(string productId);
     }
 }

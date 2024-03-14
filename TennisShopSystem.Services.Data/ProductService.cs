@@ -142,7 +142,19 @@
             return newProduct.Id.ToString();
         }
 
-        public async Task EditProductByIdAndFormModel(string productId, ProductFormModel formModel)
+        public async Task DeleteProductByIdAsync(string productId)
+        {
+            Product productToDelete = await this.dbContext
+                .Products
+                .Where(p => p.IsAvailable)
+                .FirstAsync(p => p.Id.ToString() == productId);
+
+            productToDelete.IsAvailable = false;
+
+            await this.dbContext.SaveChangesAsync();
+        }
+
+        public async Task EditProductByIdAndFormModelAsync(string productId, ProductFormModel formModel)
         {
             Product product = await this.dbContext
                 .Products
@@ -194,6 +206,20 @@
                     Email = product.Seller.User.Email,
                     PhoneNumber = product.Seller.PhoneNumber
                 }
+            };
+        }
+
+        public async Task<ProductPreDeleteDetailsViewModel> GetProductForDeleteByIdAsync(string productId)
+        {
+            Product product = await this.dbContext
+                .Products
+                .Where(p => p.IsAvailable)
+                .FirstAsync(p => p.Id.ToString() == productId);
+
+            return new ProductPreDeleteDetailsViewModel()
+            {
+                Title = product.Title,
+                ImageUrl = product.ImageUrl
             };
         }
 

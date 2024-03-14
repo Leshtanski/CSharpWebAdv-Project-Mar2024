@@ -250,7 +250,7 @@
 
             try
             {
-                await this.productService.EditProductByIdAndFormModel(id, model);
+                await this.productService.EditProductByIdAndFormModelAsync(id, model);
             }
             catch (Exception)
             {
@@ -265,6 +265,102 @@
             this.TempData[SuccessMessage] = "Product was edited successfully!";
 
             return RedirectToAction("Details", "Product", new { id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(string id)
+        {
+            bool productExists = await this.productService
+                .ExistsByIdAsync(id);
+
+            if (!productExists)
+            {
+                this.TempData[ErrorMessage] = "Product with the provided id does not exist!";
+
+                return RedirectToAction("All", "Product");
+            }
+
+            bool isUserSeller = await this.sellerService
+                .SellerExistByUserIdAsync(this.User.GetId()!);
+
+            if (!isUserSeller)
+            {
+                this.TempData[ErrorMessage] = "You must become a seller in order to edit product info!";
+
+                this.RedirectToAction("Become", "Seller");
+            }
+
+            string? sellerId = await this.sellerService.GetSellerIdByUserIdAsync(this.User.GetId()!);
+
+            bool isSellerOwner = await this.productService
+                .IsSellerWithIdOwnerOfProductWithIdAsync(id, sellerId!);
+
+            if (!isSellerOwner)
+            {
+                this.TempData[ErrorMessage] = "You must be the seller of the product you want to edit!";
+
+                return this.RedirectToAction("Mine", "Product");
+            }
+
+            try
+            {
+                ProductPreDeleteDetailsViewModel viewModel =
+                    await this.productService.GetProductForDeleteByIdAsync(id);
+
+                return this.View(viewModel);
+            }
+            catch (Exception)
+            {
+                return this.GeneralError();
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id, ProductPreDeleteDetailsViewModel viewModel)
+        {
+            bool productExists = await this.productService
+                .ExistsByIdAsync(id);
+
+            if (!productExists)
+            {
+                this.TempData[ErrorMessage] = "Product with the provided id does not exist!";
+
+                return RedirectToAction("All", "Product");
+            }
+
+            bool isUserSeller = await this.sellerService
+                .SellerExistByUserIdAsync(this.User.GetId()!);
+
+            if (!isUserSeller)
+            {
+                this.TempData[ErrorMessage] = "You must become a seller in order to edit product info!";
+
+                this.RedirectToAction("Become", "Seller");
+            }
+
+            string? sellerId = await this.sellerService.GetSellerIdByUserIdAsync(this.User.GetId()!);
+
+            bool isSellerOwner = await this.productService
+                .IsSellerWithIdOwnerOfProductWithIdAsync(id, sellerId!);
+
+            if (!isSellerOwner)
+            {
+                this.TempData[ErrorMessage] = "You must be the seller of the product you want to edit!";
+
+                return this.RedirectToAction("Mine", "Product");
+            }
+
+            try
+            {
+                await this.productService.DeleteProductByIdAsync(id);
+
+                this.TempData[WarningMessage] = "The product was successfully deleted!";
+                return this.RedirectToAction("Mine", "Product");
+            }
+            catch (Exception)
+            {
+                return this.GeneralError();
+            }
         }
 
         [HttpGet]
