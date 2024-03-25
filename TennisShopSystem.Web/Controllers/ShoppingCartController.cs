@@ -6,7 +6,6 @@
     using TennisShopSystem.Web.ViewModels.ShoppingCart;
     using static TennisShopSystem.Web.Infrastructure.Extensions.SessionExtensions;
     using Services.Data.Models.Product;
-    using Microsoft.AspNetCore.Http;
 
     public class ShoppingCartController : Controller
     {
@@ -61,12 +60,12 @@
             return this.View(cartViewModel);
         }
 
-        public IActionResult RemoveItem(string id)
+        public IActionResult DecreaseItemQuantity(string id)
         {
-            var cartItems =
+            var currentCartItems =
                 HttpContext.Session.Get<List<ShoppingCartItem>>("Cart") ?? new List<ShoppingCartItem>();
 
-            var itemToRemove = cartItems.FirstOrDefault(item => item.Product.Id.ToString() == id);
+            var itemToRemove = currentCartItems.FirstOrDefault(item => item.Product.Id.ToString() == id);
 
             if (itemToRemove != null)
             {
@@ -76,11 +75,49 @@
                 }
                 else
                 {
-                    cartItems.Remove(itemToRemove);
+                    currentCartItems.Remove(itemToRemove);
                 }
             }
 
-            HttpContext.Session.Set("Cart", cartItems);
+            HttpContext.Session.Set("Cart", currentCartItems);
+
+            return RedirectToAction("ViewCart");
+        }
+
+        public IActionResult IncreaseItemQuantity(string id)
+        {
+            var currentCartItems =
+                HttpContext.Session.Get<List<ShoppingCartItem>>("Cart") ?? new List<ShoppingCartItem>();
+
+            var itemToUpdate =
+                currentCartItems.FirstOrDefault(i => i.Product.Id.ToString() == id);
+
+            itemToUpdate.Quantity++;
+
+            var cartViewModel = new ShoppingCartViewModel()
+            {
+                CartItems = currentCartItems,
+                TotalPrice = currentCartItems.Sum(item => item.Product.Price * item.Quantity)
+            };
+
+            HttpContext.Session.Set("Cart", currentCartItems);
+
+            return RedirectToAction("ViewCart", cartViewModel);
+        }
+
+        public IActionResult RemoveItem(string id)
+        {
+            var currentCartItems =
+                HttpContext.Session.Get<List<ShoppingCartItem>>("Cart") ?? new List<ShoppingCartItem>();
+
+            var itemToRemove = currentCartItems.FirstOrDefault(item => item.Product.Id.ToString() == id);
+
+            if (itemToRemove != null)
+            {
+                currentCartItems.Remove(itemToRemove);
+            }
+
+            HttpContext.Session.Set("Cart", currentCartItems);
 
             return RedirectToAction("ViewCart");
         }
