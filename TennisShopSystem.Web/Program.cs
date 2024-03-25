@@ -1,7 +1,7 @@
 namespace TennisShopSystem.Web
 {
     using Microsoft.EntityFrameworkCore;
-    
+
     using TennisShopSystem.Data;
     using TennisShopSystem.Data.Models;
     using TennisShopSystem.Services.Data.Interfaces;
@@ -14,7 +14,7 @@ namespace TennisShopSystem.Web
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-            string connectionString = 
+            string connectionString =
                 builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<TennisShopDbContext>(options =>
                 options.UseSqlServer(connectionString));
@@ -30,7 +30,7 @@ namespace TennisShopSystem.Web
                 .AddEntityFrameworkStores<TennisShopDbContext>();
 
             builder.Services.AddApplicationServices(typeof(IProductService));
-            
+
             builder.Services
                 .AddControllersWithViews()
                 .AddMvcOptions(options =>
@@ -38,7 +38,12 @@ namespace TennisShopSystem.Web
                     options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
                 });
 
+            builder.Services.AddMemoryCache();
+            builder.Services.AddSession();
+
             WebApplication app = builder.Build();
+
+            app.UseSession();
 
             if (app.Environment.IsDevelopment())
             {
@@ -49,7 +54,7 @@ namespace TennisShopSystem.Web
             {
                 app.UseExceptionHandler("/Home/Error/500");
                 app.UseStatusCodePagesWithRedirects("/Home/Error?statusCode={0}");
-                
+
                 app.UseHsts();
             }
 

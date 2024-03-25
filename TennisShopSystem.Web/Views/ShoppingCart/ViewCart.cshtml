@@ -1,0 +1,39 @@
+﻿@model TennisShopSystem.Web.ViewModels.ShoppingCart.ShoppingCartViewModel
+
+<h1>Shopping Cart</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Brand</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.CartItems)
+        {
+            <tr>
+                <td>@item.Product.Brand</td>
+                <td>@item.Product.Category</td>
+                <td>@item.Product.Price</td>
+                <td>@item.Quantity</td>
+                <td>@((item.Product.Price * item.Quantity).ToString("C"))</td>
+                <input type="hidden" value="@item.Product.Id" />
+                <td>
+                    <a asp-controller="ShoppingCart" asp-action="RemoveItem" asp-route-id="@item.Product.Id.ToString()" class="btn btn-danger">Remove</a>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>Total:</td>
+                <td>@Model.TotalPrice?.ToString("C")</td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>
