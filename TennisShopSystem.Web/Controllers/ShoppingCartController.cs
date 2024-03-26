@@ -1,11 +1,14 @@
 ﻿namespace TennisShopSystem.Web.Controllers
 {
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using TennisShopSystem.Data;
     using TennisShopSystem.Data.Models;
     using TennisShopSystem.Web.ViewModels.ShoppingCart;
     using static TennisShopSystem.Web.Infrastructure.Extensions.SessionExtensions;
     using Services.Data.Models.Product;
+
+    //TODO: Authorize, AllowAnonymous;
 
     public class ShoppingCartController : Controller
     {

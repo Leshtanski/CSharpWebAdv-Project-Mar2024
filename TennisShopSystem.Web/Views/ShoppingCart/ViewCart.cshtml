@@ -1,5 +1,9 @@
 ﻿@model TennisShopSystem.Web.ViewModels.ShoppingCart.ShoppingCartViewModel
 
+@{
+    //TODO: Arrange buttons and Total;
+}
+
 <h1>Shopping Cart</h1>
 
 
@@ -35,14 +39,15 @@
                 <a asp-controller="ShoppingCart" asp-action="RemoveItem" asp-route-id="@item.Product.Id.ToString()" class="btn btn-danger">Remove</a>
             </td>
         </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>Total:</td>
-            <td>@Model.TotalPrice?.ToString("C")</td>
-            <td></td>
-        </tr>
     }
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>Total:</td>
+        <td>@Model.TotalPrice?.ToString("C")</td>
+        <td></td>
+    </tr>
     </tbody>
 </table>

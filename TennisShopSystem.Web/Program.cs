@@ -1,5 +1,6 @@
 namespace TennisShopSystem.Web
 {
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
     using TennisShopSystem.Data;
@@ -36,6 +37,7 @@ namespace TennisShopSystem.Web
                 .AddMvcOptions(options =>
                 {
                     options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
+                    options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                 });
 
             builder.Services.AddMemoryCache();
