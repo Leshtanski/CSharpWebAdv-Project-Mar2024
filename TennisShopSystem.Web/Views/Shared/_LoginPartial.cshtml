@@ -1,7 +1,14 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using TennisShopSystem.Data.Models
+@using TennisShopSystem.Services.Data.Interfaces
+@using TennisShopSystem.Web.Infrastructure.Extensions
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+
+@inject ISellerService SellerService
+@{
+    bool isUserSeller = await SellerService.SellerExistByUserIdAsync(this.User.GetId());
+}
 
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
@@ -9,9 +16,12 @@
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="ViewCart">Cart</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Seller" asp-action="Become">Become Seller</a>
-        </li>
+        if (!isUserSeller)
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Seller" asp-action="Become">Become Seller</a>
+            </li>
+        }
         <li class="nav-item">
             <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
         </li>

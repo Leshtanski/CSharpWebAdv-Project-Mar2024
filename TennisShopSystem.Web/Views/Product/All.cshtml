@@ -117,7 +117,7 @@
 <div class="row">
     @foreach (var product in Model.Products)
     {
+        /* TO DO: Add quantity property to product entity and show only product.Quantity > 0/ IsAvailable */
         <partial name="_ProductPartial" model="@product" />
-        /* TO DO: Go to the partial view and modify each User what he can see as buttons */
     }
 </div>

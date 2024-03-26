@@ -10,6 +10,7 @@
     using TennisShopSystem.Data.Models;
     using TennisShopSystem.Services.Data.Interfaces;
     using TennisShopSystem.Web.ViewModels.Seller;
+    //using static TennisShopSystem.Common.EntityValidationConstants;
 
     public class SellerService : ISellerService
     {
@@ -44,6 +45,25 @@
             }
 
             return seller.Id.ToString();
+        }
+
+        public async Task<bool> IsSellerWithUserIdOwnerOfProductWithIdAsync(string productId, string userId)
+        {
+            var currentSeller = await this.dbContext
+                .Sellers
+                .FirstOrDefaultAsync(cs => cs.UserId.ToString() == userId);
+
+            if (currentSeller == null)
+            {
+                return false;
+            }
+
+            var product = await this.dbContext
+                .Products
+                .Where(p => p.IsAvailable)
+                .FirstAsync(p => p.Id.ToString() == productId);
+
+            return product.SellerId == currentSeller.Id;
         }
 
         public async Task<bool> HasPurchasesByUserIdAsync(string userId)

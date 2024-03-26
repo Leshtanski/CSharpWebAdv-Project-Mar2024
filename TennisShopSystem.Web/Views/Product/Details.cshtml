@@ -1,8 +1,15 @@
-﻿@model ProductDetailsViewModel
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using TennisShopSystem.Services.Data.Interfaces
+@using TennisShopSystem.Web.Infrastructure.Extensions
+@model ProductDetailsViewModel
 
+@inject ISellerService SellerService
 @{
+    bool isUserSeller = await SellerService.SellerExistByUserIdAsync(this.User.GetId());
+    bool isSellerTheOwnerOfTheProduct = await SellerService.IsSellerWithUserIdOwnerOfProductWithIdAsync(Model.Id, this.User.GetId());
     ViewData["Title"] = "Product Details";
 }
+
 <h2 class="text-center">@ViewData["Title"]</h2>
 <hr />
 
@@ -24,8 +31,18 @@
             <div class="form-inline">
                 @if (this.User.Identity?.IsAuthenticated ?? false)
                 {
-                    <a class="btn btn-warning" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-                    <a class="ml-2 btn btn-danger" asp-controller="Product" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                    @if (!isUserSeller)
+                    {
+                        <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@Model.Id">Add to Cart</a>
+                    }
+                    if (isUserSeller && isSellerTheOwnerOfTheProduct)
+                    {
+                        <a class="btn btn-warning" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+                        <a class="ml-2 btn btn-danger" asp-controller="Product" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+                    }
+                }
+                else
+                {
                     <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@Model.Id">Add to Cart</a>
                 }
             </div>
