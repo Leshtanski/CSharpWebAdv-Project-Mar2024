@@ -131,6 +131,7 @@
                 Description = formModel.Description,
                 ImageUrl = formModel.ImageUrl,
                 Price = formModel.Price,
+                Quantity = formModel.Quantity,
                 CategoryId = formModel.CategoryId,
                 BrandId = formModel.BrandId,
                 SellerId = Guid.Parse(sellerId)
@@ -165,6 +166,7 @@
             product.Description = formModel.Description;
             product.ImageUrl = formModel.ImageUrl;
             product.Price = formModel.Price;
+            product.Quantity = formModel.Quantity;
             product.CategoryId = formModel.CategoryId;
             product.BrandId = formModel.BrandId;
 
@@ -238,6 +240,7 @@
                 Description = product.Description,
                 ImageUrl = product.ImageUrl,
                 Price = product.Price,
+                Quantity = product.Quantity,
                 CategoryId = product.CategoryId,
                 BrandId = product.BrandId
             };

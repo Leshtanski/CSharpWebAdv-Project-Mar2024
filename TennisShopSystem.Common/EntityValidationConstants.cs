@@ -26,6 +26,9 @@
 
             public const string PriceMinValue = "0";
             public const string PriceMaxValue = "2000";
+
+            public const string QuantityMinValue = "1";
+            public const string QuantityMaxValue = "1000";
         }
 
         public static class Seller 

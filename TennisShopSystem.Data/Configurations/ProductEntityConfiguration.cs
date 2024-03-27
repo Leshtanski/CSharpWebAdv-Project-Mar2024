@@ -39,16 +39,6 @@
                 .Property("Price")
                 .HasPrecision(18, 2);
 
-            //Owned Products by the Seller or Managed Products by the Seller
-
-            //builder
-            //    .HasOne(p => p.Seller)
-            //    .WithMany(b => b.BoughtHouses)
-            //    .HasForeignKey(p => p.BuyerId)
-            //    .OnDelete(DeleteBehavior.Restrict);
-
-            //Renter = Buyer
-
             builder.HasData(this.GenerateProducts());
         }
 

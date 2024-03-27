@@ -32,6 +32,11 @@
         [Display(Name = "Price Per Item")]
         public decimal Price { get; set; }
 
+        [Required]
+        [Range(typeof(int), QuantityMinValue, QuantityMaxValue)]
+        [Display(Name = "Item Quantity")]
+        public int Quantity { get; set; }
+
         public int BrandId { get; set; }
 
         public int CategoryId { get; set; }

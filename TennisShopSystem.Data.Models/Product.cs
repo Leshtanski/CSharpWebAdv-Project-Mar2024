@@ -32,6 +32,8 @@
 
         // TODO: Quantity in addition to SOFT DELETE
         public bool IsAvailable { get; set; }
+       
+        public int Quantity { get; set; }
 
         public int CategoryId { get; set; }
 
