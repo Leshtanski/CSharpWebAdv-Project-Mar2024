@@ -71,7 +71,8 @@
                     Title = p.Title,
                     Description = p.Description,
                     ImageUrl = p.ImageUrl,
-                    Price = p.Price
+                    Price = p.Price,
+                    AvailableQuantity = p.AvailableQuantity
                 })
                 .ToArrayAsync();
 
@@ -96,7 +97,8 @@
                     Title = p.Title,
                     Description = p.Description,
                     ImageUrl = p.ImageUrl,
-                    Price = p.Price
+                    Price = p.Price,
+                    AvailableQuantity = p.AvailableQuantity
                 })
                 .ToArrayAsync();
 
@@ -116,7 +118,8 @@
                     Title = p.Title,
                     Description = p.Description,
                     ImageUrl = p.ImageUrl,
-                    Price = p.Price
+                    Price = p.Price,
+                    AvailableQuantity = p.AvailableQuantity
                 })
                 .ToArrayAsync();
 
@@ -131,7 +134,7 @@
                 Description = formModel.Description,
                 ImageUrl = formModel.ImageUrl,
                 Price = formModel.Price,
-                Quantity = formModel.Quantity,
+                AvailableQuantity = formModel.AvailableQuantity,
                 CategoryId = formModel.CategoryId,
                 BrandId = formModel.BrandId,
                 SellerId = Guid.Parse(sellerId)
@@ -166,7 +169,7 @@
             product.Description = formModel.Description;
             product.ImageUrl = formModel.ImageUrl;
             product.Price = formModel.Price;
-            product.Quantity = formModel.Quantity;
+            product.AvailableQuantity = formModel.AvailableQuantity;
             product.CategoryId = formModel.CategoryId;
             product.BrandId = formModel.BrandId;
 
@@ -240,7 +243,7 @@
                 Description = product.Description,
                 ImageUrl = product.ImageUrl,
                 Price = product.Price,
-                Quantity = product.Quantity,
+                AvailableQuantity = product.AvailableQuantity,
                 CategoryId = product.CategoryId,
                 BrandId = product.BrandId
             };

@@ -21,7 +21,11 @@
         public DbSet<Product> Products { get; set; } = null!;
 
         public DbSet<Seller> Sellers { get; set; } = null!;
-        
+
+        public DbSet<Order> Orders { get; set; } = null!;
+
+        public DbSet<OrderDetails> OrdersDetails { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             Assembly configAssembly = Assembly.GetAssembly(typeof(TennisShopDbContext)) ??

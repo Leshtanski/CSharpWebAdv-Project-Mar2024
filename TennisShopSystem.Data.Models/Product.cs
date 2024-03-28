@@ -33,7 +33,7 @@
         // TODO: Quantity in addition to SOFT DELETE
         public bool IsAvailable { get; set; }
        
-        public int Quantity { get; set; }
+        public int AvailableQuantity { get; set; }
 
         public int CategoryId { get; set; }
 
@@ -47,8 +47,14 @@
 
         public virtual Seller Seller { get; set; } = null!;
 
+        //TODO: Get rid of BuyerId and Buyer because you will save purchases in Order/OrderDetails;
+
         public Guid? BuyerId { get; set; }
 
         public virtual ApplicationUser? Buyer { get; set; }
+
+        public Guid? OrderDetailsId { get; set; }
+
+        public virtual OrderDetails? OrderDetails { get; set; }
     }
 }

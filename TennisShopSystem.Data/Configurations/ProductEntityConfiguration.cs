@@ -18,6 +18,11 @@
                 .HasDefaultValue(true);
 
             builder
+                .HasOne(p => p.OrderDetails)
+                .WithMany(od => od.Items)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
                 .HasOne(p => p.Category)
                 .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId)
@@ -69,7 +74,7 @@
                 Price = 120.00M,
                 CategoryId = 3,
                 BrandId = 9,
-                SellerId = Guid.Parse("C57FAD0B-9BCD-4EB8-997E-BA644F197659"), //SellerId
+                SellerId = Guid.Parse("C57FAD0B-9BCD-4EB8-997E-BA644F197659") //SellerId
             };
             products.Add(product);
 
@@ -81,7 +86,7 @@
                 Price = 80.00M,
                 CategoryId = 4,
                 BrandId = 2,
-                SellerId = Guid.Parse("C57FAD0B-9BCD-4EB8-997E-BA644F197659"), //SellerId
+                SellerId = Guid.Parse("C57FAD0B-9BCD-4EB8-997E-BA644F197659") //SellerId
             };
             products.Add(product);
 

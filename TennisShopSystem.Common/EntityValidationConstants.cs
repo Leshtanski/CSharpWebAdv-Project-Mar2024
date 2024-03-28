@@ -1,4 +1,6 @@
-﻿namespace TennisShopSystem.Common
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TennisShopSystem.Common
 {
     public static class EntityValidationConstants
     {
@@ -35,6 +37,30 @@
         {
             public const int PhoneNumberMinLength = 7;
             public const int PhoneNumberMaxLength = 15;
+        }
+
+        public static class OrderDetails
+        {
+            public const int OrderDetailsFirstNameMinLength = 2;
+            public const int OrderDetailsFirstNameMaxLength = 250;
+
+            public const int OrderDetailsLastNameMinLength = 2;
+            public const int OrderDetailsLastNameMaxLength = 250;
+
+            public const int OrderDetailsAddressMinLength = 10;
+            public const int OrderDetailsAddressMaxLength = 300;
+
+            public const int OrderDetailsPhoneNumberMinLength = 7;
+            public const int OrderDetailsPhoneNumberMaxLength = 15;
+
+            public const int OrderDetailsEmailAddressMinLength = 10;
+            public const int OrderDetailsEmailAddressMaxLength = 200;
+
+            public const int OrderDetailsCommentMinLength = 1;
+            public const int OrderDetailsCommentMaxLength = 2000;
+
+            public const string OrderDetailsTotalPriceMinValue = "0.01";
+            public const string OrderDetailsTotalPriceMaxValue = "50000";
         }
     }
 }

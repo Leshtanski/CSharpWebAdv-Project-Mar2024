@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TennisShopSystem.Data;
 
@@ -11,9 +12,10 @@ using TennisShopSystem.Data;
 namespace TennisShopSystem.Data.Migrations
 {
     [DbContext(typeof(TennisShopDbContext))]
-    partial class TennisShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240327170251_OrderAndOrderDetailsEntityAdded")]
+    partial class OrderAndOrderDetailsEntityAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -238,7 +240,7 @@ namespace TennisShopSystem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brands", (string)null);
+                    b.ToTable("Brands");
 
                     b.HasData(
                         new
@@ -308,7 +310,7 @@ namespace TennisShopSystem.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
 
                     b.HasData(
                         new
@@ -348,11 +350,82 @@ namespace TennisShopSystem.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("TennisShopSystem.Data.Models.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<Guid?>("OrderDetailsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderDetailsId")
+                        .IsUnique()
+                        .HasFilter("[OrderDetailsId] IS NOT NULL");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("TennisShopSystem.Data.Models.OrderDetails", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EmailAddress")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrdersDetails");
+                });
+
             modelBuilder.Entity("TennisShopSystem.Data.Models.Product", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AvailableQuantity")
+                        .HasColumnType("int");
 
                     b.Property<int>("BrandId")
                         .HasColumnType("int");
@@ -383,6 +456,9 @@ namespace TennisShopSystem.Data.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
+                    b.Property<Guid?>("OrderDetailsId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -403,14 +479,17 @@ namespace TennisShopSystem.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("OrderDetailsId");
+
                     b.HasIndex("SellerId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("57c85b25-92b1-4863-9c46-0ee65806fcec"),
+                            Id = new Guid("d6e529aa-e110-4aad-9165-842e8e618504"),
+                            AvailableQuantity = 0,
                             BrandId = 1,
                             BuyerId = new Guid("cdf7d102-fa0d-4250-5bd1-08dc3cea7bb5"),
                             CategoryId = 1,
@@ -424,7 +503,8 @@ namespace TennisShopSystem.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a84663ed-d93b-48ca-8499-500584e7603c"),
+                            Id = new Guid("2b522fa1-e7f5-46c1-8542-10e237c90c99"),
+                            AvailableQuantity = 0,
                             BrandId = 9,
                             CategoryId = 3,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -437,7 +517,8 @@ namespace TennisShopSystem.Data.Migrations
                         },
                         new
                         {
-                            Id = new Guid("26572f49-d812-4589-a984-33e560065b65"),
+                            Id = new Guid("904f5086-ff5a-40bf-9157-045c43c1fb0c"),
+                            AvailableQuantity = 0,
                             BrandId = 2,
                             CategoryId = 4,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -468,7 +549,7 @@ namespace TennisShopSystem.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Sellers", (string)null);
+                    b.ToTable("Sellers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -522,6 +603,24 @@ namespace TennisShopSystem.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TennisShopSystem.Data.Models.Order", b =>
+                {
+                    b.HasOne("TennisShopSystem.Data.Models.OrderDetails", "OrderDetails")
+                        .WithOne()
+                        .HasForeignKey("TennisShopSystem.Data.Models.Order", "OrderDetailsId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("TennisShopSystem.Data.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OrderDetails");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TennisShopSystem.Data.Models.Product", b =>
                 {
                     b.HasOne("TennisShopSystem.Data.Models.Brand", "Brand")
@@ -540,6 +639,11 @@ namespace TennisShopSystem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("TennisShopSystem.Data.Models.OrderDetails", "OrderDetails")
+                        .WithMany("Items")
+                        .HasForeignKey("OrderDetailsId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("TennisShopSystem.Data.Models.Seller", "Seller")
                         .WithMany("OwnedProducts")
                         .HasForeignKey("SellerId")
@@ -551,6 +655,8 @@ namespace TennisShopSystem.Data.Migrations
                     b.Navigation("Buyer");
 
                     b.Navigation("Category");
+
+                    b.Navigation("OrderDetails");
 
                     b.Navigation("Seller");
                 });
@@ -579,6 +685,11 @@ namespace TennisShopSystem.Data.Migrations
             modelBuilder.Entity("TennisShopSystem.Data.Models.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("TennisShopSystem.Data.Models.OrderDetails", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("TennisShopSystem.Data.Models.Seller", b =>

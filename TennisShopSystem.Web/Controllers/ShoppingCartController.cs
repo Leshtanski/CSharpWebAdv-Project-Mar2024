@@ -8,7 +8,8 @@
     using static TennisShopSystem.Web.Infrastructure.Extensions.SessionExtensions;
     using Services.Data.Models.Product;
 
-    //TODO: Authorize, AllowAnonymous;
+    //TODO: Authorize, AllowAnonymous, Figure out Get and Post;
+    //TODO: Make the methods async and use try catch blocks to catch errors;
 
     public class ShoppingCartController : Controller
     {
@@ -29,24 +30,33 @@
                 .Get<List<ShoppingCartItem>>("Cart") ?? new List<ShoppingCartItem>();
 
             var existingItem = currentCartItems
-                .FirstOrDefault(ci => ci.Product.Id.ToString() == id);
+                .FirstOrDefault(ci => ci.Product.Id.ToString() == id.ToLower());
 
             if (existingItem != null)
             {
-                existingItem.Quantity++;
+                if (existingItem.Product.AvailableQuantity == existingItem.ItemQuantity)
+                {
+                    this.TempData["WarningMessage"] = "No more copies of the item to add!";
+                    return this.RedirectToAction("All", "Product");
+                }
+
+                existingItem.ItemQuantity++;
+                this.TempData["SuccessMessage"] = "Another copy of the item successfully added to shopping cart!";
             }
             else
             {
                 currentCartItems.Add(new ShoppingCartItem()
                 {
                     Product = productToAdd,
-                    Quantity = 1
+                    ItemQuantity = 1
                 });
+
+                this.TempData["SuccessMessage"] = "Item successfully added to shopping cart!";
             }
 
             HttpContext.Session.Set("Cart", currentCartItems);
 
-            return RedirectToAction("ViewCart");
+            return this.RedirectToAction("All", "Product");
         }
 
         public IActionResult ViewCart()
@@ -57,7 +67,7 @@
             var cartViewModel = new ShoppingCartViewModel()
             {
                 CartItems = currentCartItems,
-                TotalPrice = currentCartItems.Sum(item => item.Product.Price * item.Quantity)
+                TotalPrice = currentCartItems.Sum(item => item.Product.Price * item.ItemQuantity)
             };
 
             return this.View(cartViewModel);
@@ -72,9 +82,9 @@
 
             if (itemToRemove != null)
             {
-                if (itemToRemove.Quantity > 1)
+                if (itemToRemove.ItemQuantity > 1)
                 {
-                    itemToRemove.Quantity--;
+                    itemToRemove.ItemQuantity--;
                 }
                 else
                 {
@@ -95,12 +105,20 @@
             var itemToUpdate =
                 currentCartItems.FirstOrDefault(i => i.Product.Id.ToString() == id);
 
-            itemToUpdate.Quantity++;
+            if (itemToUpdate!.Product.AvailableQuantity == itemToUpdate.ItemQuantity)
+            {
+                this.TempData["WarningMessage"] = "No more copies of the item to add!";
+            }
+            else
+            {
+                itemToUpdate.ItemQuantity++;
+                this.TempData["SuccessMessage"] = "Successfully added one more copy to the item quantity!";
+            }
 
             var cartViewModel = new ShoppingCartViewModel()
             {
                 CartItems = currentCartItems,
-                TotalPrice = currentCartItems.Sum(item => item.Product.Price * item.Quantity)
+                TotalPrice = currentCartItems.Sum(item => item.Product.Price * item.ItemQuantity)
             };
 
             HttpContext.Session.Set("Cart", currentCartItems);

@@ -15,5 +15,7 @@ namespace TennisShopSystem.Web.ViewModels.Product
 
         [Display(Name = "Price per item")]
         public decimal Price { get; set; }
+
+        public int AvailableQuantity { get; set; }
     }
 }

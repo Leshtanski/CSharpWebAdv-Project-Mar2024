@@ -15,6 +15,8 @@
             this.BoughtProducts = new HashSet<Product>();
         }
 
+        //TODO: Get rid of this collection because you will save purchases in Order/OrderDetails;
+
         public virtual ICollection<Product> BoughtProducts { get; set; }
     }
 }

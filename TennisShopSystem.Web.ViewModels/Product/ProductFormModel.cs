@@ -35,7 +35,7 @@
         [Required]
         [Range(typeof(int), QuantityMinValue, QuantityMaxValue)]
         [Display(Name = "Item Quantity")]
-        public int Quantity { get; set; }
+        public int AvailableQuantity { get; set; }
 
         public int BrandId { get; set; }
 
