@@ -27,5 +27,7 @@ namespace TennisShopSystem.Web.ViewModels.OrderDetails
         public decimal TotalPrice { get; set; }
 
         public List<ShoppingCartItem> Items { get; set; }
+
+        public string? OrderRegisteredOn { get; set; }
     }
 }

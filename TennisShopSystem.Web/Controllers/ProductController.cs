@@ -375,16 +375,9 @@
 
             try
             {
-                if (isSeller)
-                {
-                    string? sellerId = await this.sellerService.GetSellerIdByUserIdAsync(userId);
+                string? sellerId = await this.sellerService.GetSellerIdByUserIdAsync(userId);
 
-                    myProducts.AddRange(await this.productService.AllBySellerIdAsync(sellerId!));
-                }
-                else
-                {
-                    myProducts.AddRange(await this.productService.AllByUserIdAsync(userId));
-                }
+                myProducts.AddRange(await this.productService.AllBySellerIdAsync(sellerId!));
 
                 return this.View(myProducts);
             }
