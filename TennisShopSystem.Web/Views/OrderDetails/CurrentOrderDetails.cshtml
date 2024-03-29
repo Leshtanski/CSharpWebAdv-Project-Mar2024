@@ -1,4 +1,6 @@
-﻿@model TennisShopSystem.Web.ViewModels.OrderDetails.OrderDetailsViewModel
+﻿@inject TennisShopDbContext dbContext;
+@using TennisShopSystem.Data
+@model TennisShopSystem.Web.ViewModels.OrderDetails.OrderDetailsViewModel
 
 <h1>Your current order details!</h1>
 <h2>Number of your Order: @Model.Id</h2>
@@ -18,9 +20,10 @@
                         <b>BGN @($"{item.Product.Price:f2}")</b>
                     </p>
                     <p>Copies Ordered: <b>@($"{item.ItemQuantity}")</b></p>
+                    <p>Total Price: @(item.ItemQuantity * item.Product.Price) </p>
                     <p>@item.Product.Description</p>
-                    <p>Category: <b>@item.Product.Category</b></p>
-                    <p>Brand: <b>@item.Product.Brand</b></p>
+                    <p>Brand: <b>@(this.dbContext.Brands.Find(item.Product.BrandId).Name)</b></p>
+                    <p>Category: <b>@(this.dbContext.Categories.Find(item.Product.CategoryId).Name)</b></p>
                     <p></p>
                 </div>
             </div>
@@ -29,11 +32,11 @@
 </div>
 <h2 class="text-center">Delivery Details</h2>
 <div class="text-center">
-    <p>Total Price: BGN @Model.TotalPrice</p>
+    <p>Order Total Price: BGN @Model.TotalPrice</p>
 </div>
 <div class="text-center">
     <p><strong>First Name: @Model.FirstName</strong></p>
-    <p><strong>Last Name:@Model.LastName</strong></p>
+    <p><strong>Last Name: @Model.LastName</strong></p>
     <p><strong>Delivery Address: @Model.Address</strong></p>
     <p><strong>Email: @Model.EmailAddress</strong></p>
     <p><strong>Phone Number: @Model.PhoneNumber</strong></p>

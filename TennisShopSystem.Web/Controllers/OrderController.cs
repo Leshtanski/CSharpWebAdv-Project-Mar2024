@@ -1,4 +1,6 @@
-﻿namespace TennisShopSystem.Web.Controllers
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TennisShopSystem.Web.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
     using TennisShopSystem.Data;
@@ -89,6 +91,23 @@
 
             this.dbContext.OrdersDetails.Add(orderDetails);
             this.dbContext.Orders.Add(order);
+
+            foreach (var item in currentCartItems)
+            {
+                Product productToDecreaseQuantity = this.dbContext.Products.First(p => p.Id == item.Product.Id);
+
+                if (productToDecreaseQuantity.AvailableQuantity - item.ItemQuantity < 0)
+                {
+                    return RedirectToAction();
+                }
+
+                productToDecreaseQuantity.AvailableQuantity -= item.ItemQuantity;
+
+                if (productToDecreaseQuantity.AvailableQuantity == 0)
+                {
+                    productToDecreaseQuantity.IsAvailable = false;
+                }
+            }
 
             this.dbContext.SaveChanges();
 

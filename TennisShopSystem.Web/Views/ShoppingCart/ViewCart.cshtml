@@ -1,8 +1,7 @@
-﻿@model TennisShopSystem.Web.ViewModels.ShoppingCart.ShoppingCartViewModel
-
-@{
-    //TODO: Arrange buttons and Total;
-}
+﻿@inject TennisShopDbContext dbContext;
+@using TennisShopSystem.Services.Data
+@using TennisShopSystem.Data
+@model TennisShopSystem.Web.ViewModels.ShoppingCart.ShoppingCartViewModel
 
 <h1>Shopping Cart</h1>
 
@@ -10,6 +9,7 @@
 <table class="table">
     <thead>
     <tr>
+        <th>Title</th>
         <th>Brand</th>
         <th>Category</th>
         <th>Price</th>
@@ -24,16 +24,17 @@
     @foreach (var item in Model.CartItems)
     {
         <tr>
-            <td>@item.Product.Brand</td>
-            <td>@item.Product.Category</td>
+            <td>@item.Product.Title</td>
+            <td>@(this.dbContext.Brands.Find(item.Product.BrandId).Name)</td>
+            <td>@(this.dbContext.Categories.Find(item.Product.CategoryId).Name)</td>
             <td>@item.Product.Price</td>
-            <input type="hidden" value="@item.Product.Id" />
+            <input type="hidden" value="@item.Product.Id"/>
             <td>
-                    <a asp-controller="ShoppingCart" asp-action="DecreaseItemQuantity" asp-route-id="@item.Product.Id.ToString()" class="btn btn-primary">Minus</a>
+                <a asp-controller="ShoppingCart" asp-action="DecreaseItemQuantity" asp-route-id="@item.Product.Id.ToString()" class="btn btn-primary">Minus</a>
             </td>
             <td>@item.ItemQuantity</td>
             <td>
-                    <a asp-controller="ShoppingCart" asp-action="IncreaseItemQuantity" asp-route-id="@item.Product.Id.ToString()" class="btn btn-primary">Plus</a>
+                <a asp-controller="ShoppingCart" asp-action="IncreaseItemQuantity" asp-route-id="@item.Product.Id.ToString()" class="btn btn-primary">Plus</a>
             </td>
             <td>
                 <a asp-controller="ShoppingCart" asp-action="RemoveItem" asp-route-id="@item.Product.Id.ToString()" class="btn btn-danger">Remove</a>
@@ -50,10 +51,22 @@
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
+        <td></td>
+        <td><b>Total: @Model.TotalPrice?.ToString("C")</b></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
         <td>
             <a asp-controller="Order" asp-action="ConfirmPurchase" class="btn btn-success">Purchase</a>
         </td>
-        <td><b>Total: @Model.TotalPrice?.ToString("C")</b></td>
     </tr>
     </tbody>
 </table>
