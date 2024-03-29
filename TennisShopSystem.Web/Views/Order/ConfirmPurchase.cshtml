@@ -1,1 +1,60 @@
-﻿<h1>This is the Order Page!</h1>
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model TennisShopSystem.Web.ViewModels.OrderDetails.OrderDetailsFormModel
+
+@{
+    int TotalItemsCount = 0;
+
+    foreach (var item in Model.Items)
+    {
+        TotalItemsCount += item.ItemQuantity;
+    }
+}
+
+<h2 class="text-center">Delivery Details</h2>
+<p></p>
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName" class="form-control" placeholder="Roger">
+                <span asp-validation-for="FirstName" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName" class="form-control" placeholder="Federer">
+                <span asp-validation-for="LastName" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address"></label>
+                <textarea asp-for="Address" rows="2" class="form-control" placeholder="My Delivery Address"></textarea>
+                <span asp-validation-for="Address" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber"></label>
+                <input asp-for="PhoneNumber" class="form-control" placeholder= "+359888888888">
+                <span asp-validation-for="PhoneNumber" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmailAddress"></label>
+                <input asp-for="EmailAddress" class="form-control" placeholder="rogerfederer@gmail.com">
+                <span asp-validation-for="EmailAddress" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Comment"></label>
+                <textarea asp-for="Comment" rows="4" class="form-control"></textarea>
+                <span asp-validation-for="Comment" class="small text-danger"></span>
+            </div>
+            <p></p>
+            <h2 class="text-center">Order Details</h2>
+            <div class="text-center">
+                <p><strong>Total Items: @TotalItemsCount</strong></p>
+                <p><strong>Total Price: BGN @Model.TotalPrice</strong></p>
+            </div>
+            <div class="text-center">
+                <input class="btn btn-primary mt-3" type="submit" value="Submit Order" />
+            </div>
+        </form>
+    </div>
+</div>
+

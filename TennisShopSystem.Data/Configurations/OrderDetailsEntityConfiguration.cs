@@ -16,6 +16,7 @@
             builder
                 .Property(od => od.TotalPrice)
                 .HasPrecision(18, 2);
+
         }
     }
 }

@@ -17,10 +17,6 @@
                 .Property(p => p.IsAvailable)
                 .HasDefaultValue(true);
 
-            builder
-                .HasOne(p => p.OrderDetails)
-                .WithMany(od => od.Items)
-                .OnDelete(DeleteBehavior.Restrict);
 
             builder
                 .HasOne(p => p.Category)

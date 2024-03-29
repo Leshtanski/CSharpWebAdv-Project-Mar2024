@@ -1,4 +1,6 @@
-﻿namespace TennisShopSystem.Data.Models
+﻿using System.Security.AccessControl;
+
+namespace TennisShopSystem.Data.Models
 {
     using System;
     using System.Collections.Generic;
@@ -43,6 +45,8 @@
         [Required]
         public decimal TotalPrice { get; set; }
 
-        public virtual List<Product> Items { get; set; } = new List<Product>();
+        public DateTime? OrderedOn { get; set; }
+
+        public virtual List<OrderedItem> OrderedItems { get; set; } = new List<OrderedItem>();
     }
 }

@@ -52,9 +52,5 @@
         public Guid? BuyerId { get; set; }
 
         public virtual ApplicationUser? Buyer { get; set; }
-
-        public Guid? OrderDetailsId { get; set; }
-
-        public virtual OrderDetails? OrderDetails { get; set; }
     }
 }
