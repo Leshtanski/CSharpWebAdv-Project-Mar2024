@@ -9,9 +9,13 @@
     using TennisShopSystem.Web.ViewModels.OrderDetails;
     using Microsoft.EntityFrameworkCore;
 
+    using static TennisShopSystem.Common.NotificationMessagesConstants;
+
     [Authorize]
     public class OrderController : Controller
     {
+        //TODO: Create OrderService and here in the methods check is current User allowed to purchase and User.IsAdmin()?
+
         private readonly TennisShopDbContext dbContext;
 
         public OrderController(TennisShopDbContext dbContext)
@@ -99,7 +103,7 @@
 
                 if (productToDecreaseQuantity.AvailableQuantity - item.ItemQuantity < 0)
                 {
-                    return RedirectToAction();
+                    return this.GeneralError();
                 }
 
                 productToDecreaseQuantity.AvailableQuantity -= item.ItemQuantity;
@@ -118,6 +122,13 @@
             HttpContext.Session.Set("Cart", currentCartItems);
 
             return RedirectToAction("CurrentOrderDetails", "OrderDetails", model);
+        }
+
+        private IActionResult GeneralError()
+        {
+            this.TempData[ErrorMessage] = "An unexpected error occurred! Please try again later or contact administrator!";
+
+            return this.RedirectToAction("Index", "Home");
         }
     }
 }

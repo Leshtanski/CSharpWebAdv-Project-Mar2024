@@ -62,15 +62,6 @@
                 return this.View(model);
             }
 
-            /* bool userHasPurchases = await this.sellerService
-                .HasPurchasesByUserIdAsync(userId);
-
-            if (userHasPurchases)
-            {
-                this.TempData[ErrorMessage] = "You must not have any purchases in order to become a seller!";
-                return this.RedirectToAction("Mine", "Product");
-            } */
-
             try
             {
                 await this.sellerService.Create(userId, model);

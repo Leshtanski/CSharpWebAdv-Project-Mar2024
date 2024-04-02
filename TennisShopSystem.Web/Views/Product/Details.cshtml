@@ -31,11 +31,11 @@
             <div class="form-inline">
                 @if (this.User.Identity?.IsAuthenticated ?? false)
                 {
-                    @if (!isUserSeller)
+                    @if (!isUserSeller || this.User.IsAdmin())
                     {
                         <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="AddToCart" asp-route-id="@Model.Id">Add to Cart</a>
                     }
-                    if (isUserSeller && isSellerTheOwnerOfTheProduct)
+                    if ((isUserSeller && isSellerTheOwnerOfTheProduct) || this.User.IsAdmin())
                     {
                         <a class="btn btn-warning" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
                         <a class="ml-2 btn btn-danger" asp-controller="Product" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>

@@ -170,7 +170,7 @@
             bool isUserSeller = await this.sellerService
                 .SellerExistByUserIdAsync(this.User.GetId()!);
 
-            if (!isUserSeller)
+            if (!isUserSeller && !this.User.IsAdmin())
             {
                 this.TempData[ErrorMessage] = "You must become a seller in order to edit product info!";
 
@@ -182,7 +182,7 @@
             bool isSellerOwner = await this.productService
                 .IsSellerWithIdOwnerOfProductWithIdAsync(id, sellerId!);
 
-            if (!isSellerOwner) 
+            if (!isSellerOwner && !this.User.IsAdmin()) 
             {
                 this.TempData[ErrorMessage] = "You must be the seller of the product you want to edit!";
 
@@ -229,7 +229,7 @@
             bool isUserSeller = await this.sellerService
                 .SellerExistByUserIdAsync(this.User.GetId()!);
 
-            if (!isUserSeller)
+            if (!isUserSeller && !this.User.IsAdmin())
             {
                 this.TempData[ErrorMessage] = "You must become a seller in order to edit product info!";
 
@@ -241,7 +241,7 @@
             bool isSellerOwner = await this.productService
                 .IsSellerWithIdOwnerOfProductWithIdAsync(id, sellerId!);
 
-            if (!isSellerOwner)
+            if (!isSellerOwner && !this.User.IsAdmin())
             {
                 this.TempData[ErrorMessage] = "You must be the seller of the product you want to edit!";
 
@@ -283,9 +283,9 @@
             bool isUserSeller = await this.sellerService
                 .SellerExistByUserIdAsync(this.User.GetId()!);
 
-            if (!isUserSeller)
+            if (!isUserSeller && !this.User.IsAdmin())
             {
-                this.TempData[ErrorMessage] = "You must become a seller in order to edit product info!";
+                this.TempData[ErrorMessage] = "You must become a seller in order to delete the product!";
 
                 this.RedirectToAction("Become", "Seller");
             }
@@ -295,9 +295,9 @@
             bool isSellerOwner = await this.productService
                 .IsSellerWithIdOwnerOfProductWithIdAsync(id, sellerId!);
 
-            if (!isSellerOwner)
+            if (!isSellerOwner && !this.User.IsAdmin())
             {
-                this.TempData[ErrorMessage] = "You must be the seller of the product you want to edit!";
+                this.TempData[ErrorMessage] = "You must be the seller of the product you want to delete it!";
 
                 return this.RedirectToAction("Mine", "Product");
             }
@@ -331,9 +331,9 @@
             bool isUserSeller = await this.sellerService
                 .SellerExistByUserIdAsync(this.User.GetId()!);
 
-            if (!isUserSeller)
+            if (!isUserSeller && !this.User.IsAdmin())
             {
-                this.TempData[ErrorMessage] = "You must become a seller in order to edit product info!";
+                this.TempData[ErrorMessage] = this.TempData[ErrorMessage] = "You must become a seller in order to delete the product!";
 
                 this.RedirectToAction("Become", "Seller");
             }
@@ -343,9 +343,9 @@
             bool isSellerOwner = await this.productService
                 .IsSellerWithIdOwnerOfProductWithIdAsync(id, sellerId!);
 
-            if (!isSellerOwner)
+            if (!isSellerOwner && !this.User.IsAdmin())
             {
-                this.TempData[ErrorMessage] = "You must be the seller of the product you want to edit!";
+                this.TempData[ErrorMessage] = "You must be the seller of the product you want to delete it!";
 
                 return this.RedirectToAction("Mine", "Product");
             }
