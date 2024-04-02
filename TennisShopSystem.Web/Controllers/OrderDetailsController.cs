@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace TennisShopSystem.Web.Controllers
+﻿namespace TennisShopSystem.Web.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
@@ -9,6 +7,7 @@ namespace TennisShopSystem.Web.Controllers
     using TennisShopSystem.Data.Models;
     using TennisShopSystem.Web.Infrastructure.Extensions;
     using TennisShopSystem.Web.ViewModels.OrderDetails;
+    using Microsoft.EntityFrameworkCore;
 
     [Authorize]
     public class OrderDetailsController : Controller
@@ -94,13 +93,13 @@ namespace TennisShopSystem.Web.Controllers
 
                     foreach (var orderedItem in allOrderedItems.Where(oi => oi.OrderDetailsId == orderDetails.Id))
                     {
-                        Product productToShoppingCartItem = await this.dbContext
+                        var productToShoppingCartItem = await this.dbContext
                             .Products
                             .FirstOrDefaultAsync(pts => pts.Id.ToString() == orderedItem.ProductId);
 
                         ShoppingCartItem shoppingCartItem = new()
                         {
-                            Product = productToShoppingCartItem,
+                            Product = productToShoppingCartItem!,
                             ItemQuantity = orderedItem.OrderedQuantity
                         };
 

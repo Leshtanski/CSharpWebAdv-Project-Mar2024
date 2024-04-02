@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace TennisShopSystem.Web.Controllers
+﻿namespace TennisShopSystem.Web.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
     using TennisShopSystem.Data;
@@ -9,6 +7,7 @@ namespace TennisShopSystem.Web.Controllers
     using TennisShopSystem.Data.Models;
     using TennisShopSystem.Web.Infrastructure.Extensions;
     using TennisShopSystem.Web.ViewModels.OrderDetails;
+    using Microsoft.EntityFrameworkCore;
 
     [Authorize]
     public class OrderController : Controller
@@ -43,7 +42,7 @@ namespace TennisShopSystem.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult ConfirmPurchase(OrderDetailsFormModel model)
+        public async Task<IActionResult> ConfirmPurchase(OrderDetailsFormModel model)
         {
             string userId = this.User.GetId()!;
 
@@ -86,15 +85,17 @@ namespace TennisShopSystem.Web.Controllers
                     OrderDetailsId = orderDetails.Id
                 };
 
-                this.dbContext.OrderedItems.Add(orderedItem);
+                await this.dbContext.OrderedItems.AddAsync(orderedItem);
             }
 
-            this.dbContext.OrdersDetails.Add(orderDetails);
-            this.dbContext.Orders.Add(order);
+            await this.dbContext.OrdersDetails.AddAsync(orderDetails);
+            await this.dbContext.Orders.AddAsync(order);
 
             foreach (var item in currentCartItems)
             {
-                Product productToDecreaseQuantity = this.dbContext.Products.First(p => p.Id == item.Product.Id);
+                Product productToDecreaseQuantity = await this.dbContext
+                    .Products
+                    .FirstAsync(p => p.Id == item.Product.Id);
 
                 if (productToDecreaseQuantity.AvailableQuantity - item.ItemQuantity < 0)
                 {
@@ -109,7 +110,7 @@ namespace TennisShopSystem.Web.Controllers
                 }
             }
 
-            this.dbContext.SaveChanges();
+            await this.dbContext.SaveChangesAsync();
 
             model.OrderId = order.Id;
             model.TotalPrice = totalPrice;

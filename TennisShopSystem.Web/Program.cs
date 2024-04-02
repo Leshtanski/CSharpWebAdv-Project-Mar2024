@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace TennisShopSystem.Web
 {
     using Microsoft.AspNetCore.Mvc;
@@ -8,6 +10,8 @@ namespace TennisShopSystem.Web
     using TennisShopSystem.Services.Data.Interfaces;
     using TennisShopSystem.Web.Infrastructure.Extensions;
     using TennisShopSystem.Web.Infrastructure.ModelBinders;
+
+    using static Common.GeneralApplicationConstants;
 
     public class Program
     {
@@ -28,6 +32,7 @@ namespace TennisShopSystem.Web
                 options.Password.RequireNonAlphanumeric = builder.Configuration.GetValue<bool>("Identity:Password:RequireNonAlphanumeric");
                 options.Password.RequiredLength = builder.Configuration.GetValue<int>("Identity:Password:RequiredLength");
             })
+                .AddRoles<IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<TennisShopDbContext>();
 
             builder.Services.AddApplicationServices(typeof(IProductService));
@@ -67,6 +72,8 @@ namespace TennisShopSystem.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.SeedAdministrator(DevelopmentAdminEmail);
 
             app.MapDefaultControllerRoute();
             //app.MapControllerRoute(

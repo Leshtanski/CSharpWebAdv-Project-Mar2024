@@ -13,18 +13,18 @@
 
     public class ShoppingCartController : Controller
     {
-        private readonly TennisShopDbContext context;
-        private List<ShoppingCartItem> cartItems;
+        private readonly TennisShopDbContext dbContext;
+        //private List<ShoppingCartItem> cartItems;
 
         public ShoppingCartController(TennisShopDbContext context)
         {
-            this.context = context;
-            cartItems = new List<ShoppingCartItem>();
+            this.dbContext = context;
+            //cartItems = new List<ShoppingCartItem>();
         }
 
         public IActionResult AddToCart(string id)
         {
-            var productToAdd = context.Products.Find(Guid.Parse(id));
+            var productToAdd = dbContext.Products.Find(Guid.Parse(id));
 
             var currentCartItems = HttpContext.Session
                 .Get<List<ShoppingCartItem>>("Cart") ?? new List<ShoppingCartItem>();
@@ -47,7 +47,7 @@
             {
                 currentCartItems.Add(new ShoppingCartItem()
                 {
-                    Product = productToAdd,
+                    Product = productToAdd!,
                     ItemQuantity = 1
                 });
 
