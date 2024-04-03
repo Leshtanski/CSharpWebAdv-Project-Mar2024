@@ -158,6 +158,7 @@
             await this.dbContext.SaveChangesAsync();
         }
 
+        //Check for non-available products to be able to be edited as well!
         public async Task EditProductByIdAndFormModelAsync(string productId, ProductFormModel formModel)
         {
             Product product = await this.dbContext
@@ -228,6 +229,7 @@
             };
         }
 
+        //Check for non-available products to be able to be edited as well!
         public async Task<ProductFormModel> GetProductForEditByIdAsync(string productId)
         {
             Product product = await this.dbContext

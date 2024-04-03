@@ -2,11 +2,11 @@
 @model TennisShopSystem.Web.ViewModels.OrderDetails.OrderDetailsFormModel
 
 @{
-    int TotalItemsCount = 0;
+    int totalItemsCount = 0;
 
     foreach (var item in Model.Items)
     {
-        TotalItemsCount += item.ItemQuantity;
+        totalItemsCount += item.ItemQuantity;
     }
 }
 
@@ -48,7 +48,7 @@
             <p></p>
             <h2 class="text-center">Order Details</h2>
             <div class="text-center">
-                <p><strong>Total Items: @TotalItemsCount</strong></p>
+                <p><strong>Total Items: @totalItemsCount</strong></p>
                 <p><strong>Total Price: BGN @Model.TotalPrice</strong></p>
             </div>
             <div class="text-center">

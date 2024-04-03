@@ -1,4 +1,6 @@
-﻿namespace TennisShopSystem.Web.Controllers
+﻿using TennisShopSystem.Services.Data.Interfaces;
+
+namespace TennisShopSystem.Web.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
     using TennisShopSystem.Data;
@@ -10,22 +12,37 @@
     using Microsoft.EntityFrameworkCore;
 
     using static TennisShopSystem.Common.NotificationMessagesConstants;
+    using TennisShopSystem.Services.Data;
 
     [Authorize]
     public class OrderController : Controller
     {
         //TODO: Create OrderService and here in the methods check is current User allowed to purchase and User.IsAdmin()?
+        // Don't forget to inject all needed Services!!!
 
         private readonly TennisShopDbContext dbContext;
+        private readonly ISellerService sellerService;
 
-        public OrderController(TennisShopDbContext dbContext)
+        public OrderController(TennisShopDbContext dbContext, ISellerService sellerService)
         {
             this.dbContext = dbContext;
+            this.sellerService = sellerService;
         }
 
         [HttpGet]
-        public IActionResult ConfirmPurchase()
+        public async Task<IActionResult> ConfirmPurchase()
         {
+            string userId = this.User.GetId()!;
+
+            bool isSeller = await sellerService.SellerExistByUserIdAsync(userId);
+
+            if (isSeller && !this.User.IsAdmin())
+            {
+                this.TempData[ErrorMessage] = "You must not be a seller in order to purchase products!";
+
+                return this.RedirectToAction("Index", "Home");
+            }
+
             var currentCartItems = HttpContext.Session
                 .Get<List<ShoppingCartItem>>("Cart") ?? new List<ShoppingCartItem>();
 
@@ -50,16 +67,23 @@
         {
             string userId = this.User.GetId()!;
 
+            bool isSeller = await sellerService.SellerExistByUserIdAsync(userId);
+
+            if (isSeller && !this.User.IsAdmin())
+            {
+                this.TempData[ErrorMessage] = "You must not be a seller in order to purchase products!";
+
+                return this.RedirectToAction("Index", "Home");
+            }
+
             var currentCartItems = HttpContext.Session
                 .Get<List<ShoppingCartItem>>("Cart") ?? new List<ShoppingCartItem>();
 
             model.Items = currentCartItems;
 
-            decimal totalPrice = 0;
-
             foreach (var item in model.Items)
             {
-                totalPrice += item.ItemQuantity * item.Product.Price;
+                model.TotalPrice += item.ItemQuantity * item.Product.Price;
             }
 
             OrderDetails orderDetails = new()
@@ -70,7 +94,7 @@
                 PhoneNumber = model.PhoneNumber,
                 EmailAddress = model.EmailAddress,
                 Comment = model.Comment,
-                TotalPrice = totalPrice,
+                TotalPrice = model.TotalPrice,
                 OrderedOn = DateTime.UtcNow
             };
 
@@ -79,6 +103,8 @@
                 UserId = Guid.Parse(userId),
                 OrderDetailsId = orderDetails.Id
             };
+
+            List<OrderedItem> orderedItems = new();
 
             foreach (var item in model.Items)
             {
@@ -89,9 +115,10 @@
                     OrderDetailsId = orderDetails.Id
                 };
 
-                await this.dbContext.OrderedItems.AddAsync(orderedItem);
+                orderedItems.Add(orderedItem);
             }
 
+            await this.dbContext.OrderedItems.AddRangeAsync(orderedItems);
             await this.dbContext.OrdersDetails.AddAsync(orderDetails);
             await this.dbContext.Orders.AddAsync(order);
 
@@ -103,21 +130,32 @@
 
                 if (productToDecreaseQuantity.AvailableQuantity - item.ItemQuantity < 0)
                 {
-                    return this.GeneralError();
+                    this.TempData[ErrorMessage] = 
+                        $"You are trying to purchase more copies of {productToDecreaseQuantity.Title} than available!";
+
+                    HttpContext.Session.Set("Cart", currentCartItems);
+                    return RedirectToAction("ViewCart", "ShoppingCart");
                 }
 
-                productToDecreaseQuantity.AvailableQuantity -= item.ItemQuantity;
-
-                if (productToDecreaseQuantity.AvailableQuantity == 0)
+                try
                 {
-                    productToDecreaseQuantity.IsAvailable = false;
+                    productToDecreaseQuantity.AvailableQuantity -= item.ItemQuantity;
+
+                    if (productToDecreaseQuantity.AvailableQuantity == 0)
+                    {
+                        productToDecreaseQuantity.IsAvailable = false;
+                    }
+                }
+                catch (Exception)
+                {
+                    HttpContext.Session.Set("Cart", currentCartItems);
+                    return this.GeneralError();
                 }
             }
 
             await this.dbContext.SaveChangesAsync();
 
             model.OrderId = order.Id;
-            model.TotalPrice = totalPrice;
 
             HttpContext.Session.Set("Cart", currentCartItems);
 
