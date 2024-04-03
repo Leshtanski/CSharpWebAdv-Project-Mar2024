@@ -8,15 +8,20 @@
     using TennisShopSystem.Web.Infrastructure.Extensions;
     using TennisShopSystem.Web.ViewModels.OrderDetails;
     using Microsoft.EntityFrameworkCore;
+    using TennisShopSystem.Services.Data;
+    using TennisShopSystem.Services.Data.Interfaces;
+    using static Common.NotificationMessagesConstants;
 
     [Authorize]
     public class OrderDetailsController : Controller
     {
         private readonly TennisShopDbContext dbContext;
+        private readonly ISellerService sellerService;
 
-        public OrderDetailsController(TennisShopDbContext dbContext)
+        public OrderDetailsController(TennisShopDbContext dbContext, ISellerService sellerService)
         {
             this.dbContext = dbContext;
+            this.sellerService = sellerService;
         }
 
         public IActionResult CurrentOrderDetails(OrderDetailsFormModel formModel)
@@ -43,6 +48,15 @@
         public async Task<IActionResult> MyOrdersDetails()
         {
             string userId = this.User.GetId()!;
+
+            bool isSeller = await sellerService.SellerExistByUserIdAsync(userId);
+
+            if (isSeller && !this.User.IsAdmin())
+            {
+                this.TempData[ErrorMessage] = "You must not be a seller to view orders!";
+
+                return this.RedirectToAction("Index", "Home");
+            }
 
             List<Order> orders = await this.dbContext
                 .Orders
