@@ -131,8 +131,18 @@
         [AllowAnonymous]
         public async Task<IActionResult> Details(string id)
         {
-            bool productExists = await this.productService
-                .ExistsByIdAsync(id);
+            string? userId = this.User.GetId();
+
+            bool productExists;
+
+            if (userId == null)
+            {
+                 productExists = await this.productService.ExistsByIdAsync(id);
+            }
+            else
+            {
+                productExists = await this.productService.ExistsBySellerIdAsync(id);
+            }
 
             if (!productExists)
             {
@@ -158,7 +168,7 @@
         public async Task<IActionResult> Edit(string id)
         {
             bool productExists = await this.productService
-                .ExistsByIdAsync(id);
+                .ExistsBySellerIdAsync(id);
 
             if (!productExists)
             {
@@ -217,7 +227,7 @@
             }
 
             bool productExists = await this.productService
-                .ExistsByIdAsync(id);
+                .ExistsBySellerIdAsync(id);
 
             if (!productExists)
             {
@@ -372,6 +382,13 @@
 
             bool isSeller = await this.sellerService
                 .SellerExistByUserIdAsync(userId);
+
+            if (!isSeller)
+            {
+                this.TempData[ErrorMessage] = "You must become a seller in order to view your products!";
+
+                return this.RedirectToAction("Become", "Seller");
+            }
 
             try
             {

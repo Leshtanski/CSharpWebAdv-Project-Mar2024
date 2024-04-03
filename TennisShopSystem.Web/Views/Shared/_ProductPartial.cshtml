@@ -8,7 +8,7 @@
 @inject ISellerService SellerService
 @inject TennisShopDbContext dbContext
 @{
-    bool isUserSeller = await SellerService.SellerExistByUserIdAsync(this.User.GetId());
+    bool isUserSeller = await SellerService.SellerExistByUserIdAsync(this.User.GetId()!);
     bool isSellerTheOwnerOfTheProduct = await SellerService.IsSellerWithUserIdOwnerOfProductWithIdAsync(Model.Id, this.User.GetId());
 
     List<OrderedItem> currentSellerSoldItems = await this.dbContext
@@ -37,7 +37,7 @@
             @if ((isUserSeller && isSellerTheOwnerOfTheProduct) || this.User.IsAdmin())
             {
                 <h6>
-                    Available Copies:
+                    Copies in stock:
                     <b>@($"{Model.AvailableQuantity}")</b>
                 </h6>
 
@@ -47,6 +47,15 @@
                         Sold Copies:
                         <b>@currentSoldItemCopies</b>
                     </h6>
+                }
+
+                if (Model.IsAvailable)
+                {
+                    <h6>Currently: Available</h6>
+                }
+                else
+                {
+                    <h6>Currently: Unavailable</h6>
                 }
             }
             <br/>

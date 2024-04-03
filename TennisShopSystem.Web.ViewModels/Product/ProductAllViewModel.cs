@@ -17,5 +17,7 @@ namespace TennisShopSystem.Web.ViewModels.Product
         public decimal Price { get; set; }
 
         public int AvailableQuantity { get; set; }
+
+        public bool IsAvailable { get; set; }
     }
 }

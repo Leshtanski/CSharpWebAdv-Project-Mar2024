@@ -60,7 +60,6 @@
 
             var product = await this.dbContext
                 .Products
-                .Where(p => p.IsAvailable)
                 .FirstAsync(p => p.Id.ToString() == productId);
 
             return product.SellerId == currentSeller.Id;

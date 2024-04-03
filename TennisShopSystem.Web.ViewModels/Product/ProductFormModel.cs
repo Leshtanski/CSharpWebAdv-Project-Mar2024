@@ -37,6 +37,8 @@
         [Display(Name = "Item Quantity")]
         public int AvailableQuantity { get; set; }
 
+        public bool IsAvailable { get; set; } = true;
+
         public int BrandId { get; set; }
 
         public int CategoryId { get; set; }

@@ -89,8 +89,7 @@
         {
             IEnumerable<ProductAllViewModel> allSellerProducts = await this.dbContext
                 .Products
-                .Where(p => p.IsAvailable &&
-                            p.SellerId.ToString() == sellerId)
+                .Where(p => p.SellerId.ToString() == sellerId)
                 .Select(p => new ProductAllViewModel
                 {
                     Id = p.Id.ToString(),
@@ -98,7 +97,8 @@
                     Description = p.Description,
                     ImageUrl = p.ImageUrl,
                     Price = p.Price,
-                    AvailableQuantity = p.AvailableQuantity
+                    AvailableQuantity = p.AvailableQuantity,
+                    IsAvailable = p.IsAvailable
                 })
                 .ToArrayAsync();
 
@@ -135,6 +135,7 @@
                 ImageUrl = formModel.ImageUrl,
                 Price = formModel.Price,
                 AvailableQuantity = formModel.AvailableQuantity,
+                IsAvailable = formModel.IsAvailable,
                 CategoryId = formModel.CategoryId,
                 BrandId = formModel.BrandId,
                 SellerId = Guid.Parse(sellerId)
@@ -163,7 +164,6 @@
         {
             Product product = await this.dbContext
                 .Products
-                .Where(p => p.IsAvailable)
                 .FirstAsync(p => p.Id.ToString() == productId);
 
             product.Title = formModel.Title;
@@ -171,6 +171,7 @@
             product.ImageUrl = formModel.ImageUrl;
             product.Price = formModel.Price;
             product.AvailableQuantity = formModel.AvailableQuantity;
+            product.IsAvailable = formModel.IsAvailable;
             product.CategoryId = formModel.CategoryId;
             product.BrandId = formModel.BrandId;
 
@@ -182,6 +183,15 @@
             bool result = await this.dbContext
                 .Products
                 .Where(p => p.IsAvailable)
+                .AnyAsync(p => p.Id.ToString() == productId);
+
+            return result;
+        }
+
+        public async Task<bool> ExistsBySellerIdAsync(string productId)
+        {
+            bool result = await this.dbContext
+                .Products
                 .AnyAsync(p => p.Id.ToString() == productId);
 
             return result;
@@ -228,15 +238,13 @@
                 ImageUrl = product.ImageUrl
             };
         }
-
-        //Check for non-available products to be able to be edited as well!
+        
         public async Task<ProductFormModel> GetProductForEditByIdAsync(string productId)
         {
             Product product = await this.dbContext
                 .Products
                 .Include(p => p.Category)
                 .Include(p => p.Brand)
-                .Where(p => p.IsAvailable)
                 .FirstAsync(p => p.Id.ToString() == productId);
 
             return new ProductFormModel()
@@ -255,7 +263,6 @@
         {
             Product product = await this.dbContext
                 .Products
-                .Where(p => p.IsAvailable)
                 .FirstAsync(p => p.Id.ToString() == productId);
 
             return product.SellerId.ToString() == sellerId;

@@ -34,5 +34,7 @@
         Task<ProductPreDeleteDetailsViewModel> GetProductForDeleteByIdAsync(string productId);
 
         Task DeleteProductByIdAsync(string productId);
+
+        Task<bool> ExistsBySellerIdAsync(string productId);
     }
 }
