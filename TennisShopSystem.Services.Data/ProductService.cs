@@ -107,21 +107,53 @@
 
         public async Task<IEnumerable<ProductAllViewModel>> AllByUserIdAsync(string userId)
         {
-            IEnumerable<ProductAllViewModel> allUserProducts = await this.dbContext
-                .Products
-                .Where(p => p.IsAvailable &&
-                            p.BuyerId.HasValue &&
-                            p.BuyerId.ToString() == userId)
-                .Select(p => new ProductAllViewModel
+            List<Order> orders = await this.dbContext
+                .Orders
+                .Where(o => o.UserId.ToString() == userId)
+                .ToListAsync();
+
+            List<OrderDetails> orderDetails = new();
+
+            foreach (Order order in orders)
+            {
+                OrderDetails? currentOrderDetails = await this.dbContext
+                    .OrdersDetails
+                    .FindAsync(order.OrderDetailsId);
+
+                orderDetails.Add(currentOrderDetails!);
+            }
+
+            List<OrderedItem> orderedItems = new();
+
+            foreach (OrderDetails orderDetail in orderDetails)
+            {
+                List<OrderedItem> items = await this.dbContext
+                    .OrderedItems
+                    .Where(oi => oi.OrderDetailsId == orderDetail.Id)
+                    .ToListAsync();
+
+                orderedItems.AddRange(items);
+            }
+
+            List<ProductAllViewModel> allUserProducts = new();
+
+            foreach (OrderedItem item in orderedItems)
+            {
+                Product? productToAdd = await this.dbContext
+                    .Products
+                    .FindAsync(Guid.Parse(item.ProductId));
+
+                allUserProducts.Add(new ProductAllViewModel
                 {
-                    Id = p.Id.ToString(),
-                    Title = p.Title,
-                    Description = p.Description,
-                    ImageUrl = p.ImageUrl,
-                    Price = p.Price,
-                    AvailableQuantity = p.AvailableQuantity
-                })
-                .ToArrayAsync();
+                    Id = productToAdd!.Id.ToString(),
+                    Title = productToAdd.Title,
+                    Description = productToAdd.Description,
+                    ImageUrl = productToAdd.ImageUrl,
+                    Price = productToAdd.Price,
+                    AvailableQuantity = productToAdd.AvailableQuantity,
+                    IsAvailable = productToAdd.IsAvailable
+                });
+            }
 
             return allUserProducts;
         }

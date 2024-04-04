@@ -28,8 +28,4 @@
     <ProjectReference Include="..\TennisShopSystem.Web.ViewModels\TennisShopSystem.Web.ViewModels.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Areas\Admin\ViewModels\" />
-  </ItemGroup>
-
 </Project>

@@ -8,6 +8,7 @@
     using Infrastructure.Extensions;
     using ViewModels.Product;
 
+    using static Common.GeneralApplicationConstants;
     using static Common.NotificationMessagesConstants;
 
     [Authorize]
@@ -380,6 +381,11 @@
             List<ProductAllViewModel> myProducts = new List<ProductAllViewModel>();
 
             string userId = this.User.GetId()!;
+
+            if (this.User.IsInRole(AdminRoleName))
+            {
+                return RedirectToAction("Mine", "Product", new { Area = AdminAreaName });
+            }
 
             bool isSeller = await this.sellerService
                 .SellerExistByUserIdAsync(userId);
