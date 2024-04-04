@@ -16,6 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +26,10 @@
     <ProjectReference Include="..\TennisShopSystem.Services.Data\TennisShopSystem.Services.Data.csproj" />
     <ProjectReference Include="..\TennisShopSystem.Web.Infrastructure\TennisShopSystem.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\TennisShopSystem.Web.ViewModels\TennisShopSystem.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Admin\ViewModels\" />
   </ItemGroup>
 
 </Project>

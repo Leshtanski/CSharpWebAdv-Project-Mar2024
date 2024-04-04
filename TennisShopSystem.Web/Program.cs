@@ -37,6 +37,8 @@ namespace TennisShopSystem.Web
 
             builder.Services.AddApplicationServices(typeof(IProductService));
 
+            //TODO: Configure application cookie, check what recaptchaService is? Video: 31:44 Kris Last Workshop15.
+
             builder.Services
                 .AddControllersWithViews()
                 .AddMvcOptions(options =>
@@ -73,13 +75,22 @@ namespace TennisShopSystem.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.SeedAdministrator(DevelopmentAdminEmail);
+            if (app.Environment.IsDevelopment())
+            {
+                app.SeedAdministrator(DevelopmentAdminEmail);
+            }
 
-            app.MapDefaultControllerRoute();
-            //app.MapControllerRoute(
-            //	name: "default",
-            //	pattern: "{controller=Home}/{action=Index}/{id?}"); // Later to be used if custom ControllerRoute is introduced.
-            app.MapRazorPages();
+            app.UseEndpoints(config =>
+            {
+                config.MapControllerRoute(
+                    name: "areas",
+                    pattern: "/{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
+
+                config.MapDefaultControllerRoute();
+
+                config.MapRazorPages();
+            });
 
             app.Run();
         }
