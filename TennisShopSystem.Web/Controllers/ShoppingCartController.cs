@@ -1,30 +1,34 @@
 ﻿namespace TennisShopSystem.Web.Controllers
 {
-    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using TennisShopSystem.Data;
-    using TennisShopSystem.Data.Models;
-    using TennisShopSystem.Web.ViewModels.ShoppingCart;
-    using static TennisShopSystem.Web.Infrastructure.Extensions.SessionExtensions;
-    using Services.Data.Models.Product;
+    using Microsoft.EntityFrameworkCore;
 
-    //TODO: Authorize, AllowAnonymous, Figure out Get and Post;
-    //TODO: Make the methods async and use try catch blocks to catch errors;
+    using Data;
+    using Data.Models;
+    using ViewModels.ShoppingCart;
+
+    using static TennisShopSystem.Web.Infrastructure.Extensions.SessionExtensions;
 
     public class ShoppingCartController : Controller
     {
         private readonly TennisShopDbContext dbContext;
-        //private List<ShoppingCartItem> cartItems;
 
         public ShoppingCartController(TennisShopDbContext context)
         {
             this.dbContext = context;
-            //cartItems = new List<ShoppingCartItem>();
         }
 
-        public IActionResult AddToCart(string id)
+        [HttpGet]
+        public async Task<IActionResult> AddToCart(string id)
         {
-            var productToAdd = dbContext.Products.Find(Guid.Parse(id));
+            var productToAdd = await this.dbContext
+                .Products
+                .FirstOrDefaultAsync(p => p.Id.ToString() == id);
+
+            if (productToAdd == null)
+            {
+                return this.RedirectToAction("Error", "Home");
+            }
 
             var currentCartItems = HttpContext.Session
                 .Get<List<ShoppingCartItem>>("Cart") ?? new List<ShoppingCartItem>();
@@ -59,6 +63,7 @@
             return this.RedirectToAction("All", "Product");
         }
 
+        [HttpGet]
         public IActionResult ViewCart()
         {
             var currentCartItems = HttpContext.Session
@@ -73,12 +78,14 @@
             return this.View(cartViewModel);
         }
 
+        [HttpGet]
         public IActionResult DecreaseItemQuantity(string id)
         {
             var currentCartItems =
                 HttpContext.Session.Get<List<ShoppingCartItem>>("Cart") ?? new List<ShoppingCartItem>();
 
-            var itemToRemove = currentCartItems.FirstOrDefault(item => item.Product.Id.ToString() == id);
+            var itemToRemove = currentCartItems
+                .FirstOrDefault(item => item.Product.Id.ToString() == id);
 
             if (itemToRemove != null)
             {
@@ -97,6 +104,7 @@
             return RedirectToAction("ViewCart");
         }
 
+        [HttpGet]
         public IActionResult IncreaseItemQuantity(string id)
         {
             var currentCartItems =
@@ -126,6 +134,7 @@
             return RedirectToAction("ViewCart", cartViewModel);
         }
 
+        [HttpGet]
         public IActionResult RemoveItem(string id)
         {
             var currentCartItems =

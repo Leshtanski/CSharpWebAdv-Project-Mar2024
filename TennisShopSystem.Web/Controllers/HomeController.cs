@@ -1,9 +1,9 @@
 ﻿namespace TennisShopSystem.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using System.Diagnostics;
+
     using TennisShopSystem.Services.Data.Interfaces;
-    using TennisShopSystem.Web.ViewModels.Home;
+    using ViewModels.Home;
 
     public class HomeController : Controller
     {

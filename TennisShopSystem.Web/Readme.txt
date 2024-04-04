@@ -1,1 +1,1 @@
-﻿1. Admin creation in the website!;
+﻿1. Admin should be created from website with admin@admin.bg, please refer to GeneralApplicationConstants.cs;

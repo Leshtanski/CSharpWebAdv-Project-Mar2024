@@ -2,12 +2,13 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+
     using TennisShopSystem.Services.Data.Interfaces;
     using TennisShopSystem.Services.Data.Models.Product;
-    using TennisShopSystem.Web.Infrastructure.Extensions;
-    using TennisShopSystem.Web.ViewModels.Product;
+    using Infrastructure.Extensions;
+    using ViewModels.Product;
 
-    using static TennisShopSystem.Common.NotificationMessagesConstants;
+    using static Common.NotificationMessagesConstants;
 
     [Authorize]
     public class ProductController : Controller

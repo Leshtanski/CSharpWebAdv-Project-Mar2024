@@ -1,15 +1,15 @@
 ﻿namespace TennisShopSystem.Web.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using TennisShopSystem.Data;
-    using TennisShopSystem.Data.Models;
-    using TennisShopSystem.Web.Infrastructure.Extensions;
-    using TennisShopSystem.Web.ViewModels.OrderDetails;
     using Microsoft.EntityFrameworkCore;
-    using TennisShopSystem.Services.Data;
+
+    using Data;
+    using Data.Models;
+    using Infrastructure.Extensions;
+    using ViewModels.OrderDetails;
     using TennisShopSystem.Services.Data.Interfaces;
+    
     using static Common.NotificationMessagesConstants;
 
     [Authorize]

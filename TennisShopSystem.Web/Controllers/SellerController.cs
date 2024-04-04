@@ -4,9 +4,10 @@
     using Microsoft.AspNetCore.Mvc;
 
     using TennisShopSystem.Services.Data.Interfaces;
-    using TennisShopSystem.Web.Infrastructure.Extensions;
-    using TennisShopSystem.Web.ViewModels.Seller;
-    using static TennisShopSystem.Common.NotificationMessagesConstants;
+    using Infrastructure.Extensions;
+    using ViewModels.Seller;
+
+    using static Common.NotificationMessagesConstants;
 
     [Authorize]
     public class SellerController : Controller

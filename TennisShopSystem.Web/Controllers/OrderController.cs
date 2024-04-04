@@ -1,25 +1,21 @@
-﻿using TennisShopSystem.Services.Data.Interfaces;
-
-namespace TennisShopSystem.Web.Controllers
+﻿namespace TennisShopSystem.Web.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
-    using TennisShopSystem.Data;
-    using Microsoft.AspNetCore.Http;
-    using Microsoft.AspNetCore.Mvc;
-    using TennisShopSystem.Data.Models;
-    using TennisShopSystem.Web.Infrastructure.Extensions;
-    using TennisShopSystem.Web.ViewModels.OrderDetails;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.AspNetCore.Mvc;
 
-    using static TennisShopSystem.Common.NotificationMessagesConstants;
-    using TennisShopSystem.Services.Data;
+    using Data;
+    using Data.Models;
+    using Infrastructure.Extensions;
+    using ViewModels.OrderDetails;
+    using TennisShopSystem.Services.Data.Interfaces;
+
+    using static Common.NotificationMessagesConstants;
+    
 
     [Authorize]
     public class OrderController : Controller
     {
-        //TODO: Create OrderService and here in the methods check is current User allowed to purchase and User.IsAdmin()?
-        // Don't forget to inject all needed Services!!!
-
         private readonly TennisShopDbContext dbContext;
         private readonly ISellerService sellerService;
 
@@ -157,7 +153,7 @@ namespace TennisShopSystem.Web.Controllers
 
             model.OrderId = order.Id;
 
-            HttpContext.Session.Set("Cart", currentCartItems);
+            HttpContext.Session.Set("Cart", new List<ShoppingCartItem>());
 
             return RedirectToAction("CurrentOrderDetails", "OrderDetails", model);
         }
