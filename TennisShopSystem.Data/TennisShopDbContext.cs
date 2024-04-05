@@ -1,4 +1,6 @@
-﻿namespace TennisShopSystem.Data
+﻿using TennisShopSystem.Data.Configurations;
+
+namespace TennisShopSystem.Data
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -9,9 +11,12 @@
     
     public class TennisShopDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
-        public TennisShopDbContext(DbContextOptions<TennisShopDbContext> options)
+        private readonly bool seedDb;
+
+        public TennisShopDbContext(DbContextOptions<TennisShopDbContext> options, bool seedDb = true)
             : base(options)
         {
+            this.seedDb = seedDb;
         }
 
         public DbSet<Category> Categories { get; set; } = null!;
@@ -30,9 +35,19 @@
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            Assembly configAssembly = Assembly.GetAssembly(typeof(TennisShopDbContext)) ??
-                                      Assembly.GetExecutingAssembly();
-            builder.ApplyConfigurationsFromAssembly(configAssembly);
+            Assembly configAssembly = Assembly.GetAssembly(typeof(TennisShopDbContext)) 
+                                   ?? Assembly.GetExecutingAssembly();
+
+            if (this.seedDb)
+            {
+                builder.ApplyConfigurationsFromAssembly(configAssembly);
+            }
+            else
+            {
+                builder.ApplyConfiguration(new ProductEntityConfiguration());
+                builder.ApplyConfiguration(new BrandEntityConfiguration());
+                builder.ApplyConfiguration(new CategoryEntityConfiguration());
+            }
 
             base.OnModelCreating(builder);
         }
