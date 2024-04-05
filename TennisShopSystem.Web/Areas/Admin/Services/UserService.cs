@@ -1,15 +1,9 @@
-﻿namespace TennisShopSystem.Services.Data
+﻿namespace TennisShopSystem.Web.Areas.Admin.Services.Interfaces
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using TennisShopSystem.Services.Data.Interfaces;
-    using TennisShopSystem.Web.ViewModels;
-    using TennisShopSystem.Data;
     using Microsoft.EntityFrameworkCore;
+    using TennisShopSystem.Data;
     using TennisShopSystem.Data.Models;
+    using TennisShopSystem.Web.Areas.Admin.ViewModels.User;
 
     public class UserService : IUserService
     {

@@ -1,0 +1,45 @@
+﻿@using TennisShopSystem.Data
+@model TennisShopSystem.Web.ViewModels.OrderDetails.AllOrdersViewModel
+
+@inject TennisShopDbContext dbContext
+
+<div>
+    @foreach (var order in Model.Orders.OrderByDescending(o => o.Id))
+    {
+        <h2>Order #: @order.Id</h2>
+        <h3>Registered On: @order.OrderRegisteredOn</h3>
+        <h3>Order Total Price: BGN @order.TotalPrice</h3>
+        foreach (var item in order.Items)
+        {
+            <div class="container" style="display:inline">
+                <div class="row">
+                    <div class="col-4">
+                        <img class="card-img-top" style="width: 20rem;" src="@item.Product.ImageUrl" alt="Product Image">
+                    </div>
+                    <div class="card col-8 border-0">
+                        <p style="font-size:25px;"><u>@item.Product.Title</u></p>
+                        <p>
+                            Price Per Item:
+                            <b>BGN @($"{item.Product.Price:f2}")</b>
+                        </p>
+                        <p>Copies Ordered: <b>@($"{item.ItemQuantity}")</b></p>
+                        <p>Total Price: @(item.ItemQuantity * item.Product.Price) </p>
+                        <p>@item.Product.Description</p>
+                        <p>Brand: <b>@(this.dbContext.Brands.Find(item.Product.BrandId).Name)</b></p>
+                        <p>Category: <b>@(this.dbContext.Categories.Find(item.Product.CategoryId).Name)</b></p>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+        }
+        <h2 class="text-center">Delivery Details</h2>
+
+        <div class="text-center">
+            <p><strong>Name: @($"{order.FirstName} {order.LastName}")</strong></p>
+            <p><strong>Address: @order.Address</strong></p>
+            <p><strong>@order.EmailAddress</strong></p>
+            <p><strong>@order.PhoneNumber</strong></p>
+        </div>
+    }
+</div>
+

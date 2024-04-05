@@ -1,15 +1,16 @@
-using Microsoft.AspNetCore.Identity;
-
 namespace TennisShopSystem.Web
 {
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.AspNetCore.Identity;
 
-    using TennisShopSystem.Data;
-    using TennisShopSystem.Data.Models;
+    using TennisShopSystem.Web.Areas.Admin.Services;
+    using TennisShopSystem.Web.Areas.Admin.Services.Interfaces;
+    using Data;
+    using Data.Models;
     using TennisShopSystem.Services.Data.Interfaces;
-    using TennisShopSystem.Web.Infrastructure.Extensions;
-    using TennisShopSystem.Web.Infrastructure.ModelBinders;
+    using Infrastructure.Extensions;
+    using Infrastructure.ModelBinders;
 
     using static Common.GeneralApplicationConstants;
 
@@ -36,6 +37,9 @@ namespace TennisShopSystem.Web
                 .AddEntityFrameworkStores<TennisShopDbContext>();
 
             builder.Services.AddApplicationServices(typeof(IProductService));
+            builder.Services.AddScoped<IOrderService, OrderService>();
+
+            //TODO: Research how you can register IOrderService with AddApplicationServices method?
 
             //TODO: Configure application cookie, check what recaptchaService is? Video: 31:44 Kris Last Workshop15.
 
