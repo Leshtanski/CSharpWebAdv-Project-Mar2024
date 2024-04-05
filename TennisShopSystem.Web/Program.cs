@@ -38,6 +38,7 @@ namespace TennisShopSystem.Web
 
             builder.Services.AddApplicationServices(typeof(IProductService));
             builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             //TODO: Research how you can register IOrderService with AddApplicationServices method?
 
