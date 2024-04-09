@@ -23,7 +23,7 @@
 
         public async Task Create(string userId, BecomeSellerFormModel model)
         {
-            Seller newSeller = new Seller()
+            Seller newSeller = new Seller
             {
                 PhoneNumber = model.PhoneNumber,
                 UserId = Guid.Parse(userId)
@@ -63,20 +63,6 @@
                 .FirstAsync(p => p.Id.ToString() == productId);
 
             return product.SellerId == currentSeller.Id;
-        }
-
-        public async Task<bool> HasPurchasesByUserIdAsync(string userId)
-        {
-            ApplicationUser? user = await this.dbContext
-                .Users
-                .FirstOrDefaultAsync(u => u.Id.ToString() == userId);
-
-            if (user == null)
-            {
-                return false;
-            }
-
-            return user.BoughtProducts.Any();
         }
 
         public async Task<bool> SellerExistByUserIdAsync(string userId)

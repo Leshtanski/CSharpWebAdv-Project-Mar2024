@@ -1,12 +1,11 @@
-﻿using TennisShopSystem.Data.Configurations;
-
-namespace TennisShopSystem.Data
+﻿namespace TennisShopSystem.Data
 {
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using System.Reflection;
 
+    using Configurations;
     using Models;
     
     public class TennisShopDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>

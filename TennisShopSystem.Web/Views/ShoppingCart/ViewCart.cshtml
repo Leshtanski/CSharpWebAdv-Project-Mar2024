@@ -1,7 +1,7 @@
-﻿@inject TennisShopDbContext dbContext;
-@using TennisShopSystem.Services.Data
-@using TennisShopSystem.Data
+﻿@using TennisShopSystem.Data
 @model TennisShopSystem.Web.ViewModels.ShoppingCart.ShoppingCartViewModel
+
+@inject TennisShopDbContext DbContext;
 
 <h1>Shopping Cart</h1>
 
@@ -25,8 +25,8 @@
     {
         <tr>
             <td>@item.Product.Title</td>
-            <td>@(this.dbContext.Brands.Find(item.Product.BrandId).Name)</td>
-            <td>@(this.dbContext.Categories.Find(item.Product.CategoryId).Name)</td>
+            <td>@(this.DbContext.Brands.Find(item.Product.BrandId).Name)</td>
+            <td>@(this.DbContext.Categories.Find(item.Product.CategoryId).Name)</td>
             <td>@item.Product.Price</td>
             <input type="hidden" value="@item.Product.Id"/>
             <td>

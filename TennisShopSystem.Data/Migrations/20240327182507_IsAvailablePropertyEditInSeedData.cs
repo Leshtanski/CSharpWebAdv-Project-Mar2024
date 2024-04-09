@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-
-#nullable disable
+﻿#nullable disable
 
 namespace TennisShopSystem.Data.Migrations
 {
+    using System;
+    using Microsoft.EntityFrameworkCore.Migrations;
+
     public partial class IsAvailablePropertyEditInSeedData : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

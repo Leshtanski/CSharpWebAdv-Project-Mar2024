@@ -15,6 +15,6 @@
 
         public int? TotalQuantity { get; set; }
 
-        public List<ShoppingCartItem> CartItems { get; set; }
+        public List<ShoppingCartItem> CartItems { get; set; } = new();
     }
 }

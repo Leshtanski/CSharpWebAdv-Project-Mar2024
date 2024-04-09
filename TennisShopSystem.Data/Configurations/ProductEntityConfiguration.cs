@@ -3,7 +3,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-    using TennisShopSystem.Data.Models;
+    using Models;
 
     public class ProductEntityConfiguration : IEntityTypeConfiguration<Product>
     {
