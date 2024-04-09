@@ -44,8 +44,6 @@
             else
             {
                 builder.ApplyConfiguration(new ProductEntityConfiguration());
-                builder.ApplyConfiguration(new BrandEntityConfiguration());
-                builder.ApplyConfiguration(new CategoryEntityConfiguration());
             }
 
             base.OnModelCreating(builder);

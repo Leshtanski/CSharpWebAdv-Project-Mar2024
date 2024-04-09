@@ -17,6 +17,10 @@
         public static Seller SellerTwo;
         public static Product Product;
         public static Product ProductTwo;
+        public static Brand Brand;
+        public static Brand BrandTwo;
+        public static Category Category;
+        public static Category CategoryTwo;
 
         public static void SeedDatabase(TennisShopDbContext dbContext)
         {
@@ -103,6 +107,30 @@
                 SellerId = SellerTwo.Id
             };
 
+            Brand = new Brand
+            {
+                Id = 15,
+                Name = "Nike",
+            };
+
+            BrandTwo = new Brand
+            {
+                Id = 16,
+                Name = "Adidas"
+            };
+
+            Category = new Category
+            {
+                Id = 20,
+                Name = "Rackets"
+            };
+
+            CategoryTwo = new Category
+            {
+                Id = 21,
+                Name = "Balls"
+            };
+
             dbContext.Users.Add(SellerUser);
             dbContext.Users.Add(SellerUserTwo);
             dbContext.Users.Add(RegisteredUser);
@@ -110,6 +138,10 @@
             dbContext.Sellers.Add(SellerTwo);
             dbContext.Products.Add(Product);
             dbContext.Products.Add(ProductTwo);
+            dbContext.Brands.Add(Brand);
+            dbContext.Brands.Add(BrandTwo);
+            dbContext.Categories.Add(Category);
+            dbContext.Categories.Add(CategoryTwo);
 
             dbContext.SaveChanges();
         }

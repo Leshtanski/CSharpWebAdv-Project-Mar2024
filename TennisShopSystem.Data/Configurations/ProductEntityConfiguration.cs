@@ -49,7 +49,7 @@
 
             Product product;
 
-            product = new Product()
+            product = new Product
             {
                 Title = "Babolat Tennis Racket",
                 Description = "This tennis racket was made with some experimental materials.",
@@ -62,7 +62,7 @@
             };
             products.Add(product);
 
-            product = new Product()
+            product = new Product
             {
                 Title = "Nike Tennis Shoe",
                 Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat tempus lorem et porttitor. Donec aliquam laoreet sem sit amet malesuada.",
@@ -74,7 +74,7 @@
             };
             products.Add(product);
 
-            product = new Product()
+            product = new Product
             {
                 Title = "Head Tennis Bag",
                 Description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent feugiat tempus lorem et porttitor. Donec aliquam laoreet sem sit amet malesuada.",
