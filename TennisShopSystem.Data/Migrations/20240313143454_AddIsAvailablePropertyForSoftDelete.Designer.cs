@@ -359,9 +359,6 @@ namespace TennisShopSystem.Data.Migrations
                     b.Property<int>("BrandId")
                         .HasColumnType("int");
 
-                    b.Property<Guid?>("BuyerId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -401,8 +398,6 @@ namespace TennisShopSystem.Data.Migrations
 
                     b.HasIndex("BrandId");
 
-                    b.HasIndex("BuyerId");
-
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("SellerId");
@@ -414,14 +409,13 @@ namespace TennisShopSystem.Data.Migrations
                         {
                             Id = new Guid("57c85b25-92b1-4863-9c46-0ee65806fcec"),
                             BrandId = 1,
-                            BuyerId = new Guid("cdf7d102-fa0d-4250-5bd1-08dc3cea7bb5"),
                             CategoryId = 1,
                             CreatedOn = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "This tennis racket was made with some experimental materials.",
                             ImageUrl = "https://pngset.com/images/nadal-babolat-tennis-racket-transparent-png-599557.png",
                             IsAvailable = false,
                             Price = 100.00m,
-                            SellerId = new Guid("c57fad0b-9bcd-4eb8-997e-ba644f197659"),
+                            //SellerId = new Guid("c57fad0b-9bcd-4eb8-997e-ba644f197659"),
                             Title = "Babolat Tennis Racket"
                         },
                         new
@@ -434,7 +428,7 @@ namespace TennisShopSystem.Data.Migrations
                             ImageUrl = "https://bityl.co/Obcm",
                             IsAvailable = false,
                             Price = 120.00m,
-                            SellerId = new Guid("c57fad0b-9bcd-4eb8-997e-ba644f197659"),
+                            //SellerId = new Guid("c57fad0b-9bcd-4eb8-997e-ba644f197659"),
                             Title = "Nike Tennis Shoe"
                         },
                         new
@@ -447,7 +441,7 @@ namespace TennisShopSystem.Data.Migrations
                             ImageUrl = "https://stringersworld-1f835.kxcdn.com/wp-content/uploads/2023/11/04kng3icvnr.png",
                             IsAvailable = false,
                             Price = 80.00m,
-                            SellerId = new Guid("c57fad0b-9bcd-4eb8-997e-ba644f197659"),
+                            //SellerId = new Guid("c57fad0b-9bcd-4eb8-997e-ba644f197659"),
                             Title = "Head Tennis Bag"
                         });
                 });
@@ -532,10 +526,6 @@ namespace TennisShopSystem.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TennisShopSystem.Data.Models.ApplicationUser", "Buyer")
-                        .WithMany("BoughtProducts")
-                        .HasForeignKey("BuyerId");
-
                     b.HasOne("TennisShopSystem.Data.Models.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
@@ -549,8 +539,6 @@ namespace TennisShopSystem.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Brand");
-
-                    b.Navigation("Buyer");
 
                     b.Navigation("Category");
 
@@ -566,11 +554,6 @@ namespace TennisShopSystem.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TennisShopSystem.Data.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("BoughtProducts");
                 });
 
             modelBuilder.Entity("TennisShopSystem.Data.Models.Brand", b =>

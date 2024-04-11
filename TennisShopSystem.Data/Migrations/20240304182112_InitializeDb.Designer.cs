@@ -249,9 +249,6 @@ namespace TennisShopSystem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("BuyerId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -277,8 +274,6 @@ namespace TennisShopSystem.Data.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BuyerId");
 
                     b.HasIndex("CategoryId");
 
@@ -361,10 +356,6 @@ namespace TennisShopSystem.Data.Migrations
 
             modelBuilder.Entity("TennisShopSystem.Data.Models.Product", b =>
                 {
-                    b.HasOne("TennisShopSystem.Data.Models.ApplicationUser", "Buyer")
-                        .WithMany("BoughtProducts")
-                        .HasForeignKey("BuyerId");
-
                     b.HasOne("TennisShopSystem.Data.Models.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
@@ -376,8 +367,6 @@ namespace TennisShopSystem.Data.Migrations
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Buyer");
 
                     b.Navigation("Category");
 
@@ -393,11 +382,6 @@ namespace TennisShopSystem.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("TennisShopSystem.Data.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("BoughtProducts");
                 });
 
             modelBuilder.Entity("TennisShopSystem.Data.Models.Category", b =>
