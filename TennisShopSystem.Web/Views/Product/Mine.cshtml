@@ -15,7 +15,6 @@
 <div class="row">
     @foreach (ProductAllViewModel product in Model)
     {
-        //TODO: Create separate view for buyers to display their purchases! Also add new Entity Purchase with DateTime BoughtOn property!
         <partial name="_ProductPartial" model="@product" />
     }
 </div>

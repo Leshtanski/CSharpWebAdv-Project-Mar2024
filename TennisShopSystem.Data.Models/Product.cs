@@ -42,14 +42,8 @@
 
         public virtual Brand Brand { get; set; } = null!;
 
-        public Guid SellerId { get; set; }
+        public Guid? SellerId { get; set; }
 
-        public virtual Seller Seller { get; set; } = null!;
-
-        //TODO: Get rid of BuyerId and Buyer because you will save purchases in Order/OrderDetails;
-
-        public Guid? BuyerId { get; set; }
-
-        public virtual ApplicationUser? Buyer { get; set; }
+        public virtual Seller? Seller { get; set; }
     }
 }

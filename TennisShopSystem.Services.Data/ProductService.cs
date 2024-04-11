@@ -234,7 +234,6 @@
                 .Include(p => p.Brand)
                 .Include(p => p.Seller)
                 .ThenInclude(s => s.User)
-                .Where(p => p.IsAvailable)
                 .FirstAsync(p => p.Id.ToString() == productId);
 
             return new ProductDetailsViewModel()

@@ -57,8 +57,6 @@
                 Price = 100.00M,
                 CategoryId = 1,
                 BrandId = 1,
-                SellerId = Guid.Parse("C57FAD0B-9BCD-4EB8-997E-BA644F197659"), //SellerId
-                BuyerId = Guid.Parse("CDF7D102-FA0D-4250-5BD1-08DC3CEA7BB5") //UserId
             };
             products.Add(product);
 
@@ -70,7 +68,6 @@
                 Price = 120.00M,
                 CategoryId = 3,
                 BrandId = 9,
-                SellerId = Guid.Parse("C57FAD0B-9BCD-4EB8-997E-BA644F197659") //SellerId
             };
             products.Add(product);
 
@@ -82,7 +79,6 @@
                 Price = 80.00M,
                 CategoryId = 4,
                 BrandId = 2,
-                SellerId = Guid.Parse("C57FAD0B-9BCD-4EB8-997E-BA644F197659") //SellerId
             };
             products.Add(product);
 
