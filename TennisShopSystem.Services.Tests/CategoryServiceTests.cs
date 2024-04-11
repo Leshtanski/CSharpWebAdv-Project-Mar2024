@@ -4,14 +4,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using TennisShopSystem.Data;
-    using TennisShopSystem.Services.Data.Interfaces;
-    using TennisShopSystem.Services.Data;
-    using TennisShopSystem.Web.ViewModels.Brand;
+    using Data.Interfaces;
+    using Data;
     using static DatabaseSeeder;
-    using TennisShopSystem.Web.ViewModels.Category;
+    using Web.ViewModels.Category;
 
     public class CategoryServiceTests
     {

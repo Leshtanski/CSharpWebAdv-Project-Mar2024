@@ -40,8 +40,6 @@ namespace TennisShopSystem.Web
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IUserService, UserService>();
 
-            //TODO: Research how you can register IOrderService with AddApplicationServices method?
-
             //TODO: Configure application cookie, check what recaptchaService is? Video: 31:44 Kris Last Workshop15.
 
             builder.Services

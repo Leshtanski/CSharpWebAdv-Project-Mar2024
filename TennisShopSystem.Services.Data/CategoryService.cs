@@ -2,8 +2,8 @@
 {
     using Microsoft.EntityFrameworkCore;
     using TennisShopSystem.Data;
-    using TennisShopSystem.Services.Data.Interfaces;
-    using TennisShopSystem.Web.ViewModels.Category;
+    using Interfaces;
+    using Web.ViewModels.Category;
 
     public class CategoryService : ICategoryService
     {

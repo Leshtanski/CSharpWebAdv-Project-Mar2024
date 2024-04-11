@@ -1,6 +1,6 @@
 ﻿namespace TennisShopSystem.Services.Data.Interfaces
 {
-    using TennisShopSystem.Web.ViewModels.Seller;
+    using Web.ViewModels.Seller;
 
     public interface ISellerService
     {

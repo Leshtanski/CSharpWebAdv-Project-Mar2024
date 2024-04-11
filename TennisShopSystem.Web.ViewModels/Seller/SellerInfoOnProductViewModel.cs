@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TennisShopSystem.Web.ViewModels.Seller
+﻿namespace TennisShopSystem.Web.ViewModels.Seller
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class SellerInfoOnProductViewModel
     {
         public string Email { get; set; } = null!;

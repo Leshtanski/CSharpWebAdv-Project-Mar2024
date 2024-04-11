@@ -1,7 +1,7 @@
-﻿using TennisShopSystem.Web.ViewModels.Seller;
-
-namespace TennisShopSystem.Web.ViewModels.Product
+﻿namespace TennisShopSystem.Web.ViewModels.Product
 {
+    using Seller;
+
     public class ProductDetailsViewModel : ProductAllViewModel
     {
         public string Category { get; set; } = null!;

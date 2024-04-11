@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TennisShopSystem.Data.Models;
-
-namespace TennisShopSystem.Web.ViewModels.OrderDetails
+﻿namespace TennisShopSystem.Web.ViewModels.OrderDetails
 {
+    using System.Collections.Generic;
+    using Data.Models;
+
     public class OrderDetailsViewModel
     {
         public int Id { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace TennisShopSystem.Services.Data.Interfaces
 {
-    using TennisShopSystem.Web.ViewModels.Brand;
+    using Web.ViewModels.Brand;
 
     public interface IBrandService
     {

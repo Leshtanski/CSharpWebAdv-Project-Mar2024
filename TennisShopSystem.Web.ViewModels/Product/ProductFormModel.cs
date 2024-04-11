@@ -1,8 +1,8 @@
 ﻿namespace TennisShopSystem.Web.ViewModels.Product
 {
     using System.ComponentModel.DataAnnotations;
-    using TennisShopSystem.Web.ViewModels.Brand;
-    using TennisShopSystem.Web.ViewModels.Category;
+    using Brand;
+    using Category;
 
     using static TennisShopSystem.Common.EntityValidationConstants.Product;
 

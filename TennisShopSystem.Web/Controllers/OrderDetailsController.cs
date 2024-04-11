@@ -9,7 +9,7 @@
     using Infrastructure.Extensions;
     using ViewModels.OrderDetails;
     using TennisShopSystem.Services.Data.Interfaces;
-    
+
     using static Common.NotificationMessagesConstants;
 
     [Authorize]

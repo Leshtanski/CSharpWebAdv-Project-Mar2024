@@ -3,10 +3,6 @@
     using TennisShopSystem.Data.Models;
     using TennisShopSystem.Data;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public static class DatabaseSeeder
     {
@@ -17,10 +13,17 @@
         public static Seller SellerTwo;
         public static Product Product;
         public static Product ProductTwo;
+        public static Product ProductThree;
         public static Brand Brand;
         public static Brand BrandTwo;
         public static Category Category;
         public static Category CategoryTwo;
+        public static Order Order;
+        public static Order OrderTwo;
+        public static OrderDetails OrderDetails;
+        public static OrderDetails OrderDetailsTwo;
+        public static List<OrderedItem> OrderedItems;
+        public static List<OrderedItem> OrderedItemsTwo;
 
         public static void SeedDatabase(TennisShopDbContext dbContext)
         {
@@ -77,7 +80,7 @@
 
             Product = new Product
             {
-                Id = Guid.Parse("E1EC4BB2-D890-40E7-BF4C-0EA73990C496"),
+                Id = Guid.Parse("e1ec4bb2-d890-40e7-bf4c-0ea73990c496"),
                 Title = "Head Tennis Racket",
                 Description = "This is the Prestige Head Tennis Racket! You will have a 200 km serve with it!",
                 ImageUrl =
@@ -93,7 +96,7 @@
 
             ProductTwo = new Product
             {
-                Id = Guid.Parse("0A5F0D11-C157-4CE0-A552-1F8BB032CEE2"),
+                Id = Guid.Parse("0a5f0d11-c157-4ce0-a552-1f8bb032cee2"),
                 Title = "Adidas Headband",
                 Description = "This is an authentic headband for tennis! You will not sweat your eyes with it!",
                 ImageUrl =
@@ -105,6 +108,22 @@
                 CategoryId = 2,
                 BrandId = 6,
                 SellerId = SellerTwo.Id
+            };
+
+            ProductThree = new Product
+            {
+                Id = Guid.Parse("8ce39907-3ca4-44fd-955b-c30ccdeb67b8"),
+                Title = "Adidas Headband",
+                Description = "This is an authentic headband for tennis! You will not sweat your eyes with it!",
+                ImageUrl =
+                    "https://i5.walmartimages.com/seo/Adidas-Tennis-Tie-Back-Aeroready-Reversible-Headband-Red-Black_2976cee6-649c-4be5-bc9c-5104efe73a01.120a9790acefba7ae71b7e4ef02a679a.jpeg?odnHeight=640&odnWidth=640&odnBg=FFFFFF",
+                Price = 20.00m,
+                CreatedOn = default,
+                IsAvailable = false,
+                AvailableQuantity = 0,
+                CategoryId = 2,
+                BrandId = 6,
+                SellerId = Seller.Id
             };
 
             Brand = new Brand
@@ -131,6 +150,80 @@
                 Name = "Balls"
             };
 
+            OrderDetails = new OrderDetails
+            {
+                Id = Guid.Parse("085d317d-389b-48b2-8d82-dfb3d3de632a"),
+                FirstName = "Rafael",
+                LastName = "Nadal",
+                Address = "Mallorca, Spain",
+                PhoneNumber = "+359876565234",
+                EmailAddress = "rafaelnadal@abv.bg",
+                Comment = "Rafa",
+                TotalPrice = 200,
+                OrderedOn = null,
+                OrderedItems = new List<OrderedItem>()
+            };
+
+            OrderDetailsTwo = new OrderDetails
+            {
+                Id = Guid.Parse("0ac77787-c4d5-412c-b9df-d3c2a76b4e2d"),
+                FirstName = "Rafael",
+                LastName = "Nadal",
+                Address = "Mallorca, Spain",
+                PhoneNumber = "+359876565234",
+                EmailAddress = "rafaelnadal@abv.bg",
+                Comment = "Rafa",
+                TotalPrice = 100,
+                OrderedOn = null,
+                OrderedItems = new List<OrderedItem>()
+            };
+
+            OrderedItems = new List<OrderedItem>
+            {
+                new OrderedItem
+                {
+                    Id = Guid.Parse("42dac2e9-aca6-47bc-ac79-7f6d0a4b6a36"),
+                    ProductId = Product.Id.ToString(),
+                    OrderedQuantity = 1,
+                    OrderDetailsId = OrderDetails.Id
+                },
+                new OrderedItem
+                {
+                    Id = Guid.Parse("13557a50-7d95-401d-bb7e-7948cc818ca0"),
+                    ProductId = ProductTwo.Id.ToString(),
+                    OrderedQuantity = 1,
+                    OrderDetailsId = OrderDetails.Id
+                }
+            };
+
+            OrderedItemsTwo = new List<OrderedItem>
+            {
+                new OrderedItem
+                {
+                    Id = Guid.Parse("3a387da9-bacb-4a58-8a5d-bf4d5d9b911d"),
+                    ProductId = ProductThree.Id.ToString(),
+                    OrderedQuantity = 1,
+                    OrderDetailsId = OrderDetailsTwo.Id
+                }
+            };
+
+            OrderDetails.OrderedItems = OrderedItems;
+            OrderDetailsTwo.OrderedItems = OrderedItemsTwo;
+
+            Order = new Order
+            {
+                Id = 1,
+                UserId = RegisteredUser.Id,
+                OrderDetailsId = Guid.Parse("085d317d-389b-48b2-8d82-dfb3d3de632a")
+            };
+
+            OrderTwo = new Order
+            {
+                Id = 2,
+                UserId = RegisteredUser.Id,
+                OrderDetailsId = Guid.Parse("0ac77787-c4d5-412c-b9df-d3c2a76b4e2d")
+            };
+
             dbContext.Users.Add(SellerUser);
             dbContext.Users.Add(SellerUserTwo);
             dbContext.Users.Add(RegisteredUser);
@@ -138,10 +231,15 @@
             dbContext.Sellers.Add(SellerTwo);
             dbContext.Products.Add(Product);
             dbContext.Products.Add(ProductTwo);
+            dbContext.Products.Add(ProductThree);
             dbContext.Brands.Add(Brand);
             dbContext.Brands.Add(BrandTwo);
             dbContext.Categories.Add(Category);
             dbContext.Categories.Add(CategoryTwo);
+            dbContext.Orders.Add(Order);
+            dbContext.Orders.Add(OrderTwo);
+            dbContext.OrdersDetails.Add(OrderDetails);
+            dbContext.OrdersDetails.Add(OrderDetailsTwo);
 
             dbContext.SaveChanges();
         }

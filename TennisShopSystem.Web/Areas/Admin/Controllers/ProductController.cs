@@ -1,11 +1,10 @@
-﻿using TennisShopSystem.Web.Infrastructure.Extensions;
-
-namespace TennisShopSystem.Web.Areas.Admin.Controllers
+﻿namespace TennisShopSystem.Web.Areas.Admin.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
 
     using ViewModels.Product;
     using TennisShopSystem.Services.Data.Interfaces;
+    using Infrastructure.Extensions;
 
     public class ProductController : BaseAdminController
     {

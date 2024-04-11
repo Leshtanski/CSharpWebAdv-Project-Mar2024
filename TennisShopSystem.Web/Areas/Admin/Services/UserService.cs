@@ -1,9 +1,10 @@
-﻿namespace TennisShopSystem.Web.Areas.Admin.Services.Interfaces
+﻿namespace TennisShopSystem.Web.Areas.Admin.Services
 {
     using Microsoft.EntityFrameworkCore;
-    using TennisShopSystem.Data;
-    using TennisShopSystem.Data.Models;
-    using TennisShopSystem.Web.Areas.Admin.ViewModels.User;
+    using Data;
+    using Data.Models;
+    using ViewModels.User;
+    using Interfaces;
 
     public class UserService : IUserService
     {

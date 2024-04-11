@@ -2,8 +2,8 @@
 {
     using Microsoft.EntityFrameworkCore;
     using TennisShopSystem.Data;
-    using TennisShopSystem.Services.Data.Interfaces;
-    using TennisShopSystem.Web.ViewModels.Brand;
+    using Interfaces;
+    using Web.ViewModels.Brand;
 
     public class BrandService : IBrandService
     {

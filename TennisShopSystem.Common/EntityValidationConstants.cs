@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TennisShopSystem.Common
+﻿namespace TennisShopSystem.Common
 {
     public static class EntityValidationConstants
     {

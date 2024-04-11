@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TennisShopSystem.Web.ViewModels.Product
+﻿namespace TennisShopSystem.Web.ViewModels.Product
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class ProductAllViewModel
     {
         public string Id { get; set; } = null!;

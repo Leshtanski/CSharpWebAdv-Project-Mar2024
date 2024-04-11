@@ -1,7 +1,7 @@
-﻿using TennisShopSystem.Web.ViewModels.Product;
-
-namespace TennisShopSystem.Web.Areas.Admin.ViewModels.Product
+﻿namespace TennisShopSystem.Web.Areas.Admin.ViewModels.Product
 {
+    using TennisShopSystem.Web.ViewModels.Product;
+
     public class MyProductsViewModel
     {
         public IEnumerable<ProductAllViewModel> AddedProducts { get; set; } = null!;

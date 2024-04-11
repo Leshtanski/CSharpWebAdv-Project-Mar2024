@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TennisShopSystem.Web.ViewModels.Product
+﻿namespace TennisShopSystem.Web.ViewModels.Product
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class ProductPreDeleteDetailsViewModel
     {
         public string Title { get; set; } = null!;

@@ -1,9 +1,9 @@
 ﻿namespace TennisShopSystem.Web.ViewModels.Product
 {
     using System.ComponentModel.DataAnnotations;
-    using TennisShopSystem.Web.ViewModels.Product.Enums;
+    using Enums;
 
-    using static TennisShopSystem.Common.GeneralApplicationConstants;
+    using static Common.GeneralApplicationConstants;
 
     public class AllProductQueryModel
     {

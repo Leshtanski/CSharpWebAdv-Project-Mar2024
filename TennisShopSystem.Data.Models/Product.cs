@@ -29,8 +29,7 @@
         public decimal Price { get; set; }
 
         public DateTime CreatedOn { get; set; }
-
-        // TODO: Quantity in addition to SOFT DELETE
+        
         public bool IsAvailable { get; set; }
        
         public int AvailableQuantity { get; set; }

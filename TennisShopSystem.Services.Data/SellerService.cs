@@ -2,15 +2,11 @@
 {
     using Microsoft.EntityFrameworkCore;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
     using TennisShopSystem.Data;
     using TennisShopSystem.Data.Models;
-    using TennisShopSystem.Services.Data.Interfaces;
-    using TennisShopSystem.Web.ViewModels.Seller;
-    //using static TennisShopSystem.Common.EntityValidationConstants;
+    using Interfaces;
+    using Web.ViewModels.Seller;
 
     public class SellerService : ISellerService
     {

@@ -7,14 +7,12 @@
     using System.Threading.Tasks;
     using TennisShopSystem.Data;
     using TennisShopSystem.Data.Models;
-    using TennisShopSystem.Services.Data.Interfaces;
-    using TennisShopSystem.Services.Data.Models.Product;
-    using TennisShopSystem.Web.ViewModels.Home;
-    using TennisShopSystem.Web.ViewModels.Product;
-    using TennisShopSystem.Web.ViewModels.Product.Enums;
-    using TennisShopSystem.Web.ViewModels.Seller;
-
-    //using Product = TennisShopSystem.Data.Models.Product;
+    using Interfaces;
+    using Models.Product;
+    using Web.ViewModels.Home;
+    using Web.ViewModels.Product;
+    using Web.ViewModels.Product.Enums;
+    using Web.ViewModels.Seller;
 
     public class ProductService : IProductService
     {
@@ -190,8 +188,7 @@
 
             await this.dbContext.SaveChangesAsync();
         }
-
-        //Check for non-available products to be able to be edited as well!
+        
         public async Task EditProductByIdAndFormModelAsync(string productId, ProductFormModel formModel)
         {
             Product product = await this.dbContext
@@ -249,7 +246,7 @@
                 Price = product.Price,
                 Brand = product.Brand.Name,
                 Category = product.Category.Name,
-                Seller = new SellerInfoOnProductViewModel()
+                Seller = new SellerInfoOnProductViewModel
                 {
                     Email = product.Seller.User.Email,
                     PhoneNumber = product.Seller.PhoneNumber
@@ -279,7 +276,7 @@
                 .Include(p => p.Brand)
                 .FirstAsync(p => p.Id.ToString() == productId);
 
-            return new ProductFormModel()
+            return new ProductFormModel
             {
                 Title = product.Title,
                 Description = product.Description,

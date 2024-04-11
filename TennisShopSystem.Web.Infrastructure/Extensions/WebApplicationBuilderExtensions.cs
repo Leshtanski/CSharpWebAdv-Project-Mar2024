@@ -6,9 +6,9 @@
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Identity;
-    using TennisShopSystem.Data.Models;
+    using Data.Models;
 
-    using static TennisShopSystem.Common.GeneralApplicationConstants;
+    using static Common.GeneralApplicationConstants;
 
     public static class WebApplicationBuilderExtensions
     {

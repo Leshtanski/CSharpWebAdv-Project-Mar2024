@@ -4,7 +4,7 @@
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using System.Collections.Generic;
     using System.Linq;
-    using TennisShopSystem.Data.Models;
+    using Models;
 
     public class BrandEntityConfiguration : IEntityTypeConfiguration<Brand>
     {

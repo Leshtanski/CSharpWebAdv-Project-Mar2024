@@ -1,6 +1,6 @@
 ﻿namespace TennisShopSystem.Web.Areas.Admin.Services.Interfaces
 {
-    using TennisShopSystem.Web.Areas.Admin.ViewModels.User;
+    using ViewModels.User;
 
     public interface IUserService
     {

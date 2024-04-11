@@ -1,13 +1,10 @@
 ﻿namespace TennisShopSystem.Services.Data.Interfaces
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
-    using TennisShopSystem.Services.Data.Models.Product;
-    using TennisShopSystem.Web.ViewModels.Home;
-    using TennisShopSystem.Web.ViewModels.Product;
+    using Models.Product;
+    using Web.ViewModels.Home;
+    using Web.ViewModels.Product;
 
     public interface IProductService
     {
