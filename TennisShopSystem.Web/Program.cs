@@ -6,9 +6,9 @@ namespace TennisShopSystem.Web
 
     using TennisShopSystem.Web.Areas.Admin.Services;
     using TennisShopSystem.Web.Areas.Admin.Services.Interfaces;
+    using TennisShopSystem.Services.Data.Interfaces;
     using Data;
     using Data.Models;
-    using TennisShopSystem.Services.Data.Interfaces;
     using Infrastructure.Extensions;
     using Infrastructure.ModelBinders;
 
