@@ -40,7 +40,10 @@ namespace TennisShopSystem.Web
             builder.Services.AddScoped<IOrderService, OrderService>();
             builder.Services.AddScoped<IUserService, UserService>();
 
-            //TODO: Configure application cookie, check what recaptchaService is? Video: 31:44 Kris Last Workshop15.
+            builder.Services.ConfigureApplicationCookie(opt =>
+            {
+                opt.AccessDeniedPath = "/Home/Error";
+            });
 
             builder.Services
                 .AddControllersWithViews()
