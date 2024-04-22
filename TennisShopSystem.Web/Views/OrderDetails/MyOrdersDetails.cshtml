@@ -1,8 +1,6 @@
 ﻿@using TennisShopSystem.Data
 @model TennisShopSystem.Web.ViewModels.OrderDetails.AllOrdersViewModel
 
-@inject TennisShopDbContext dbContext
-
 <div>
     @foreach (var order in Model.Orders.OrderByDescending(o => o.Id))
     {
@@ -25,8 +23,8 @@
                         <p>Copies Ordered: <b>@($"{item.ItemQuantity}")</b></p>
                         <p>Total Price: @(item.ItemQuantity * item.Product.Price) </p>
                         <p>@item.Product.Description</p>
-                        <p>Brand: <b>@(this.dbContext.Brands.Find(item.Product.BrandId).Name)</b></p>
-                        <p>Category: <b>@(this.dbContext.Categories.Find(item.Product.CategoryId).Name)</b></p>
+                        <p>Brand: <b>@order.Brands.First(b => b.Id == item.Product.BrandId).Name</b></p>
+                        <p>Category: <b>@order.Categories.First(c => c.Id == item.Product.CategoryId).Name</b></p>
                         <p></p>
                     </div>
                 </div>

@@ -1,6 +1,7 @@
 ﻿namespace TennisShopSystem.Web.ViewModels.Product
 {
     using System.ComponentModel.DataAnnotations;
+    using TennisShopSystem.Data.Models;
 
     public class ProductAllViewModel
     {
@@ -19,5 +20,7 @@
         public int AvailableQuantity { get; set; }
 
         public bool IsAvailable { get; set; }
+
+        public int? SoldItems { get; set; }
     }
 }

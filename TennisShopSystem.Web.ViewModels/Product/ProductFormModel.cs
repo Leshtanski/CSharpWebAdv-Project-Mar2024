@@ -23,6 +23,7 @@
         public string Description { get; set; } = null!;
 
         [Required]
+        [Url]
         [StringLength(ImageUrlMaxLength)]
         [Display(Name = "Image Link")]
         public string ImageUrl { get; set; } = null!;

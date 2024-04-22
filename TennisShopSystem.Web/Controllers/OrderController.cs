@@ -53,8 +53,6 @@
                 model.TotalPrice += item.ItemQuantity * item.Product.Price;
             }
 
-            HttpContext.Session.Set("Cart", currentCartItems);
-
             return View(model);
         }
 
@@ -153,7 +151,7 @@
 
             model.OrderId = order.Id;
 
-            HttpContext.Session.Set("Cart", new List<ShoppingCartItem>());
+            HttpContext.Session.Set("Cart", currentCartItems);
 
             return RedirectToAction("CurrentOrderDetails", "OrderDetails", model);
         }

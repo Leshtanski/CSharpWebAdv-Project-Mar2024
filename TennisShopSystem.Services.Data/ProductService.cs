@@ -74,6 +74,14 @@
                 })
                 .ToArrayAsync();
 
+            foreach (ProductAllViewModel model in allProducts)
+            {
+                model.SoldItems = await this.dbContext
+                   .OrderedItems
+                   .Where(oi => oi.ProductId == model.Id)
+                   .CountAsync();
+            }
+
             int totalProducts = productsQuery.Count();
 
             return new AllProductsFilteredAndPagedServiceModel()
@@ -99,6 +107,14 @@
                     IsAvailable = p.IsAvailable
                 })
                 .ToArrayAsync();
+
+            foreach (ProductAllViewModel model in allSellerProducts)
+            {
+                model.SoldItems = await this.dbContext
+                   .OrderedItems
+                   .Where(oi => oi.ProductId == model.Id)
+                   .CountAsync();
+            }
 
             return allSellerProducts;
         }

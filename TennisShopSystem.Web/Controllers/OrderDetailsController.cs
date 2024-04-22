@@ -17,14 +17,22 @@
     {
         private readonly TennisShopDbContext dbContext;
         private readonly ISellerService sellerService;
+        private readonly IBrandService brandService;
+        private readonly ICategoryService categoryService;
 
-        public OrderDetailsController(TennisShopDbContext dbContext, ISellerService sellerService)
+        public OrderDetailsController(
+                TennisShopDbContext dbContext, 
+                ISellerService sellerService,
+                IBrandService brandService,
+                ICategoryService categoryService)
         {
             this.dbContext = dbContext;
             this.sellerService = sellerService;
+            this.brandService = brandService;
+            this.categoryService = categoryService;
         }
 
-        public IActionResult CurrentOrderDetails(OrderDetailsFormModel formModel)
+        public async Task<IActionResult> CurrentOrderDetails(OrderDetailsFormModel formModel)
         {
             var currentCartItems = HttpContext.Session
                 .Get<List<ShoppingCartItem>>("Cart") ?? new List<ShoppingCartItem>();
@@ -39,8 +47,12 @@
                 EmailAddress = formModel.EmailAddress,
                 Comment = formModel.Comment,
                 TotalPrice = formModel.TotalPrice,
-                Items = currentCartItems
+                Items = currentCartItems,
+                Categories = await this.categoryService.AllCategoriesAsync(),
+                Brands = await this.brandService.AllBrandsAsync()
             };
+
+            HttpContext.Session.Set("Cart", new List<ShoppingCartItem>());
 
             return View(model);
         }
@@ -102,7 +114,9 @@
                         EmailAddress = orderDetails.EmailAddress,
                         TotalPrice = orderDetails.TotalPrice,
                         Items = new List<ShoppingCartItem>(),
-                        OrderRegisteredOn = orderDetails.OrderedOn.ToString()
+                        OrderRegisteredOn = orderDetails.OrderedOn.ToString(),
+                        Categories = await this.categoryService.AllCategoriesAsync(),
+                        Brands = await this.brandService.AllBrandsAsync()
                     };
 
                     foreach (var orderedItem in allOrderedItems.Where(oi => oi.OrderDetailsId == orderDetails.Id))

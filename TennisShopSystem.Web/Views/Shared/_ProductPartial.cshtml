@@ -6,22 +6,9 @@
 @model ProductAllViewModel
 
 @inject ISellerService SellerService
-@inject TennisShopDbContext dbContext
 @{
-    bool isUserSeller = await SellerService.SellerExistByUserIdAsync(this.User.GetId()!);
+    bool isUserSeller = await SellerService.SellerExistByUserIdAsync(this.User.GetId());
     bool isSellerTheOwnerOfTheProduct = await SellerService.IsSellerWithUserIdOwnerOfProductWithIdAsync(Model.Id, this.User.GetId());
-
-    List<OrderedItem> currentSellerSoldItems = await this.dbContext
-        .OrderedItems
-        .Where(oi => oi.ProductId == Model.Id)
-        .ToListAsync();
-
-    int currentSoldItemCopies = 0;
-
-    foreach (var item in currentSellerSoldItems)
-    {
-        currentSoldItemCopies += item.OrderedQuantity;
-    }
 }
 
 <div class="col-md-4">
@@ -41,11 +28,11 @@
                     <b>@($"{Model.AvailableQuantity}")</b>
                 </h6>
 
-                if (currentSoldItemCopies > 0)
+                if (Model.SoldItems > 0)
                 {
                     <h6>
                         Sold Copies:
-                        <b>@currentSoldItemCopies</b>
+                        <b>@Model.SoldItems</b>
                     </h6>
                 }
 

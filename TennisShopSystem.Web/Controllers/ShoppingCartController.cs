@@ -8,14 +8,19 @@
     using ViewModels.ShoppingCart;
 
     using static TennisShopSystem.Web.Infrastructure.Extensions.SessionExtensions;
+    using TennisShopSystem.Services.Data.Interfaces;
 
     public class ShoppingCartController : Controller
     {
         private readonly TennisShopDbContext dbContext;
+        private readonly IBrandService brandService;
+        private readonly ICategoryService categoryService;
 
-        public ShoppingCartController(TennisShopDbContext context)
+        public ShoppingCartController(TennisShopDbContext context, ICategoryService categoryService, IBrandService brandService)
         {
             this.dbContext = context;
+            this.categoryService = categoryService;
+            this.brandService = brandService;
         }
 
         [HttpGet]
@@ -62,9 +67,8 @@
 
             return this.RedirectToAction("All", "Product");
         }
-
-        [HttpGet]
-        public IActionResult ViewCart()
+        
+        public async Task<IActionResult> ViewCart()
         {
             var currentCartItems = HttpContext.Session
                 .Get<List<ShoppingCartItem>>("Cart") ?? new List<ShoppingCartItem>();
@@ -72,13 +76,14 @@
             var cartViewModel = new ShoppingCartViewModel()
             {
                 CartItems = currentCartItems,
-                TotalPrice = currentCartItems.Sum(item => item.Product.Price * item.ItemQuantity)
+                TotalPrice = currentCartItems.Sum(item => item.Product.Price * item.ItemQuantity),
+                Brands = await this.brandService.AllBrandsAsync(),
+                Categories = await this.categoryService.AllCategoriesAsync()
             };
 
             return this.View(cartViewModel);
         }
-
-        [HttpGet]
+        
         public IActionResult DecreaseItemQuantity(string id)
         {
             var currentCartItems =
@@ -103,8 +108,7 @@
 
             return RedirectToAction("ViewCart");
         }
-
-        [HttpGet]
+        
         public IActionResult IncreaseItemQuantity(string id)
         {
             var currentCartItems =
@@ -123,18 +127,11 @@
                 this.TempData["SuccessMessage"] = "Successfully added one more copy to the item quantity!";
             }
 
-            var cartViewModel = new ShoppingCartViewModel()
-            {
-                CartItems = currentCartItems,
-                TotalPrice = currentCartItems.Sum(item => item.Product.Price * item.ItemQuantity)
-            };
-
             HttpContext.Session.Set("Cart", currentCartItems);
 
-            return RedirectToAction("ViewCart", cartViewModel);
+            return RedirectToAction("ViewCart");
         }
-
-        [HttpGet]
+        
         public IActionResult RemoveItem(string id)
         {
             var currentCartItems =

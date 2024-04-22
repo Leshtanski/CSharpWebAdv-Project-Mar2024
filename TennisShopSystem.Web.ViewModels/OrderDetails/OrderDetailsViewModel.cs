@@ -2,6 +2,8 @@
 {
     using System.Collections.Generic;
     using Data.Models;
+    using TennisShopSystem.Web.ViewModels.Brand;
+    using TennisShopSystem.Web.ViewModels.Category;
 
     public class OrderDetailsViewModel
     {
@@ -24,5 +26,11 @@
         public List<ShoppingCartItem> Items { get; set; }
 
         public string? OrderRegisteredOn { get; set; }
+
+        public IEnumerable<ProductSelectCategoryFormModel> Categories { get; set; } 
+            = new List<ProductSelectCategoryFormModel>();
+
+        public IEnumerable<ProductSelectBrandFormModel> Brands { get; set; } 
+            = new List<ProductSelectBrandFormModel>();
     }
 }
