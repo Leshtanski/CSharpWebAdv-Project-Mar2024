@@ -1,9 +1,8 @@
 ﻿namespace TennisShopSystem.Web.Areas.Admin.Controllers
 {
-    using Services.Interfaces;
     using ViewModels.User;
     using Microsoft.AspNetCore.Mvc;
-    
+    using TennisShopSystem.Services.Data.Interfaces;
 
     public class UserController : BaseAdminController
     {

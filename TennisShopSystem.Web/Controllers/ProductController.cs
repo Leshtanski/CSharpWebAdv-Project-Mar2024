@@ -4,7 +4,6 @@
     using Microsoft.AspNetCore.Mvc;
 
     using TennisShopSystem.Services.Data.Interfaces;
-    using TennisShopSystem.Services.Data.Models.Product;
     using Infrastructure.Extensions;
     using ViewModels.Product;
 

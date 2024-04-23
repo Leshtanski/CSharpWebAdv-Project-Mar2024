@@ -10,7 +10,6 @@
     <ProjectReference Include="..\TennisShopSystem.Common\TennisShopSystem.Common.csproj" />
     <ProjectReference Include="..\TennisShopSystem.Data.Models\TennisShopSystem.Data.Models.csproj" />
     <ProjectReference Include="..\TennisShopSystem.Data\TennisShopSystem.Data.csproj" />
-    <ProjectReference Include="..\TennisShopSystem.Services.Data.Models\TennisShopSystem.Services.Data.Models.csproj" />
     <ProjectReference Include="..\TennisShopSystem.Web.ViewModels\TennisShopSystem.Web.ViewModels.csproj" />
   </ItemGroup>
 

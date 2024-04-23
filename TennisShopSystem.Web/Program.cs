@@ -4,8 +4,6 @@ namespace TennisShopSystem.Web
     using Microsoft.EntityFrameworkCore;
     using Microsoft.AspNetCore.Identity;
 
-    using TennisShopSystem.Web.Areas.Admin.Services;
-    using TennisShopSystem.Web.Areas.Admin.Services.Interfaces;
     using TennisShopSystem.Services.Data.Interfaces;
     using Data;
     using Data.Models;
@@ -37,8 +35,8 @@ namespace TennisShopSystem.Web
                 .AddEntityFrameworkStores<TennisShopDbContext>();
 
             builder.Services.AddApplicationServices(typeof(IProductService));
-            builder.Services.AddScoped<IOrderService, OrderService>();
-            builder.Services.AddScoped<IUserService, UserService>();
+            //builder.Services.AddScoped<IOrderService, OrderService>();
+            //builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.ConfigureApplicationCookie(opt =>
             {

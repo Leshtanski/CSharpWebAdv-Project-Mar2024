@@ -1,4 +1,4 @@
-﻿namespace TennisShopSystem.Web.Areas.Admin.ViewModels.User
+﻿namespace TennisShopSystem.Web.ViewModels.User
 {
     public class UserViewModel
     {

@@ -8,7 +8,6 @@
     using TennisShopSystem.Data;
     using TennisShopSystem.Data.Models;
     using Interfaces;
-    using Models.Product;
     using Web.ViewModels.Home;
     using Web.ViewModels.Product;
     using Web.ViewModels.Product.Enums;

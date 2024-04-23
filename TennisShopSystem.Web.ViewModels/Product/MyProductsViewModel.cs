@@ -1,4 +1,4 @@
-﻿namespace TennisShopSystem.Web.Areas.Admin.ViewModels.Product
+﻿namespace TennisShopSystem.Web.ViewModels.Product
 {
     using TennisShopSystem.Web.ViewModels.Product;
 

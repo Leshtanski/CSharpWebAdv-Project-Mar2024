@@ -1,4 +1,4 @@
-﻿namespace TennisShopSystem.Web.Areas.Admin.Services.Interfaces
+﻿namespace TennisShopSystem.Services.Data.Interfaces
 {
     using TennisShopSystem.Web.ViewModels.OrderDetails;
 

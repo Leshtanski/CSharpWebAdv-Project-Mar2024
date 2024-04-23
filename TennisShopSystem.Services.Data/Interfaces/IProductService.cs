@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Models.Product;
     using Web.ViewModels.Home;
     using Web.ViewModels.Product;
 

@@ -1,10 +1,10 @@
-﻿namespace TennisShopSystem.Web.Areas.Admin.Services
+﻿namespace TennisShopSystem.Services.Data
 {
-    using Data;
-    using TennisShopSystem.Web.ViewModels.OrderDetails;
-    using Interfaces;
-    using Data.Models;
     using Microsoft.EntityFrameworkCore;
+    using TennisShopSystem.Data;
+    using TennisShopSystem.Data.Models;
+    using Interfaces;
+    using TennisShopSystem.Web.ViewModels.OrderDetails;
 
     public class OrderService : IOrderService
     {
@@ -18,7 +18,7 @@
         public async Task<AllOrdersViewModel> GetAllOrdersAsync()
         {
             List<Order> orders = await this.dbContext.Orders.ToListAsync();
-                
+
             List<OrderDetails> ordersDetails = await this.dbContext.OrdersDetails.ToListAsync();
 
             List<OrderedItem> orderedItems = await this.dbContext.OrderedItems.ToListAsync();

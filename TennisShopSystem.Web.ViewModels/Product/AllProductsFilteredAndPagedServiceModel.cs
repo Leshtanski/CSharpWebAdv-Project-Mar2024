@@ -1,7 +1,5 @@
-﻿namespace TennisShopSystem.Services.Data.Models.Product
+﻿namespace TennisShopSystem.Web.ViewModels.Product
 {
-    using TennisShopSystem.Web.ViewModels.Product;
-
     public class AllProductsFilteredAndPagedServiceModel
     {
         public AllProductsFilteredAndPagedServiceModel()

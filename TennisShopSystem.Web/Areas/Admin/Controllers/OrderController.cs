@@ -2,7 +2,6 @@
 {
     using Microsoft.AspNetCore.Mvc;
 
-    using Services.Interfaces;
     using TennisShopSystem.Services.Data.Interfaces;
     using TennisShopSystem.Web.ViewModels.OrderDetails;
 

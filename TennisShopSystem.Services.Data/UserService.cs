@@ -1,10 +1,10 @@
-﻿namespace TennisShopSystem.Web.Areas.Admin.Services
+﻿namespace TennisShopSystem.Services.Data
 {
     using Microsoft.EntityFrameworkCore;
-    using Data;
-    using Data.Models;
-    using ViewModels.User;
     using Interfaces;
+    using TennisShopSystem.Data;
+    using TennisShopSystem.Web.ViewModels.User;
+    using TennisShopSystem.Data.Models;
 
     public class UserService : IUserService
     {
@@ -28,9 +28,9 @@
 
             foreach (UserViewModel user in allUsers)
             {
-                Seller? seller = this.dbContext
+                Seller? seller = await this.dbContext
                     .Sellers
-                    .FirstOrDefault(s => s.UserId.ToString() == user.Id);
+                    .FirstOrDefaultAsync(s => s.UserId.ToString() == user.Id);
 
                 if (seller != null)
                 {
