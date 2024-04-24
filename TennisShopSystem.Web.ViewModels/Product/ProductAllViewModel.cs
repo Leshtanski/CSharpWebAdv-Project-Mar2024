@@ -1,7 +1,6 @@
 ﻿namespace TennisShopSystem.Web.ViewModels.Product
 {
     using System.ComponentModel.DataAnnotations;
-    using TennisShopSystem.Data.Models;
 
     public class ProductAllViewModel
     {

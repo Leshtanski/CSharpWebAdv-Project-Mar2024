@@ -35,15 +35,23 @@
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> All([FromQuery]AllProductQueryDto queryModel)
+        public async Task<IActionResult> All([FromQuery]AllProductQueryModel queryModel)
         {
-            AllProductsFilteredAndPagedDto serviceModel = await this.productService.AllAsync(queryModel);
+            AllProductQueryDto model = new()
+            {
+                Category = queryModel.Category,
+                Brand = queryModel.Brand,
+                SearchString = queryModel.SearchString,
+                ProductSorting = (DataTransferObjects.Product.Enums.ProductSorting)queryModel.ProductSorting,
+                CurrentPage = queryModel.CurrentPage,
+                ProductsPerPage = queryModel.ProductsPerPage
+            };
 
-            AllProductQueryModel model = new();
+            AllProductsFilteredAndPagedDto serviceModel = await this.productService.AllAsync(model);
 
             foreach (ProductAllDto modelDto in serviceModel.Products)
             {
-                ProductAllViewModel viewModel = new()
+                ProductAllViewModel productModel = new()
                 {
                     Id = modelDto.Id,
                     Title = modelDto.Title,
@@ -55,14 +63,14 @@
                     SoldItems = modelDto.SoldItems
                 };
 
-                model.Products.Add(viewModel);
+                queryModel.Products.Add(productModel);
             }
-            
-            model.TotalProducts = serviceModel.TotalProductsCount;
-            model.Categories = await this.categoryService.AllCategoryNamesAsync();
-            model.Brands = await this.brandService.AllBrandNamesAsync();
 
-            return this.View(model);
+            queryModel.TotalProducts = serviceModel.TotalProductsCount;
+            queryModel.Categories = await this.categoryService.AllCategoryNamesAsync();
+            queryModel.Brands = await this.brandService.AllBrandNamesAsync();
+
+            return this.View(queryModel);
         }
 
         [HttpGet]

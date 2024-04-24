@@ -20,12 +20,15 @@
 
         public string? Brand { get; set; }
 
+        [Display(Name = "Search by keyword")]
         public string? SearchString { get; set; }
 
+        [Display(Name = "Sort By")]
         public ProductSorting ProductSorting { get; set; }
 
         public int CurrentPage { get; set; }
 
+        [Display(Name = "Show Products Per Page")]
         public int ProductsPerPage { get; set; }
 
         public int TotalProducts { get; set; }
