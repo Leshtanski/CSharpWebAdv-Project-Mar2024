@@ -35,8 +35,6 @@ namespace TennisShopSystem.Web
                 .AddEntityFrameworkStores<TennisShopDbContext>();
 
             builder.Services.AddApplicationServices(typeof(IProductService));
-            //builder.Services.AddScoped<IOrderService, OrderService>();
-            //builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.ConfigureApplicationCookie(opt =>
             {

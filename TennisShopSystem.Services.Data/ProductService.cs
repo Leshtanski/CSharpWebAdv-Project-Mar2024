@@ -9,7 +9,6 @@
     using TennisShopSystem.Data.Models;
     using Interfaces;
     using Web.ViewModels.Product;
-    using Web.ViewModels.Seller;
     using TennisShopSystem.DataTransferObjects;
     using TennisShopSystem.DataTransferObjects.Product.Enums;
     using TennisShopSystem.DataTransferObjects.Product;

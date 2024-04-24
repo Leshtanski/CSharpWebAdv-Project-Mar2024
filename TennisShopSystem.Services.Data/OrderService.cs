@@ -4,8 +4,6 @@
     using TennisShopSystem.Data;
     using TennisShopSystem.Data.Models;
     using Interfaces;
-    using TennisShopSystem.Web.ViewModels.OrderDetails;
-    using System.Net.Http;
     using TennisShopSystem.DataTransferObjects.Order;
 
     public class OrderService : IOrderService

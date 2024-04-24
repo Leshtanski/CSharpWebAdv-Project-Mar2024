@@ -1,7 +1,5 @@
 ﻿namespace TennisShopSystem.DataTransferObjects.Product
 {
-    using System.ComponentModel.DataAnnotations;
-
     public class ProductAllDto
     {
         public string Id { get; set; } = null!;

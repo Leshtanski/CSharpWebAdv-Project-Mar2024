@@ -1,10 +1,7 @@
 ﻿namespace TennisShopSystem.DataTransferObjects.Product
 {
-    using System.ComponentModel.DataAnnotations;
     using Brand;
     using Category;
-
-    using static TennisShopSystem.Common.EntityValidationConstants.Product;
 
     public class ProductFormDto
     {
