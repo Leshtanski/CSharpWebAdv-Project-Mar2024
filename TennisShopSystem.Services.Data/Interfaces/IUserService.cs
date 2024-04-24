@@ -1,9 +1,9 @@
 ﻿namespace TennisShopSystem.Services.Data.Interfaces
 {
-    using TennisShopSystem.Web.ViewModels.User;
+    using TennisShopSystem.DataTransferObjects.User;
 
     public interface IUserService
     {
-        Task<IEnumerable<UserViewModel>> AllAsync();
+        Task<IEnumerable<UserDto>> AllAsync();
     }
 }

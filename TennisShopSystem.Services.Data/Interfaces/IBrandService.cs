@@ -1,10 +1,10 @@
 ﻿namespace TennisShopSystem.Services.Data.Interfaces
 {
-    using Web.ViewModels.Brand;
+    using TennisShopSystem.DataTransferObjects.Brand;
 
     public interface IBrandService
     {
-        Task<IEnumerable<ProductSelectBrandFormModel>> AllBrandsAsync();
+        Task<IEnumerable<ProductSelectBrandFormDto>> AllBrandsAsync();
 
         Task<bool> ExistsByIdAsync(int id);
 

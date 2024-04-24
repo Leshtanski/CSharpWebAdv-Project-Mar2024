@@ -3,7 +3,7 @@
     using Microsoft.EntityFrameworkCore;
     using TennisShopSystem.Data;
     using Interfaces;
-    using Web.ViewModels.Brand;
+    using TennisShopSystem.DataTransferObjects.Brand;
 
     public class BrandService : IBrandService
     {
@@ -24,12 +24,12 @@
             return allBrandNames;
         }
 
-        public async Task<IEnumerable<ProductSelectBrandFormModel>> AllBrandsAsync()
+        public async Task<IEnumerable<ProductSelectBrandFormDto>> AllBrandsAsync()
         {
-            IEnumerable<ProductSelectBrandFormModel> allBrands = await this.dbContext
+            IEnumerable<ProductSelectBrandFormDto> allBrands = await this.dbContext
                 .Brands
                 .AsNoTracking()
-                .Select(c => new ProductSelectBrandFormModel
+                .Select(c => new ProductSelectBrandFormDto
                 {
                     Id = c.Id,
                     Name = c.Name

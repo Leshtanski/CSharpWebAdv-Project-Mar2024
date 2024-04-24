@@ -1,10 +1,10 @@
 ﻿namespace TennisShopSystem.Services.Data.Interfaces
 {
-    using Web.ViewModels.Category;
+    using TennisShopSystem.DataTransferObjects.Category;
 
     public interface ICategoryService
     {
-        Task<IEnumerable<ProductSelectCategoryFormModel>> AllCategoriesAsync();
+        Task<IEnumerable<ProductSelectCategoryFormDto>> AllCategoriesAsync();
 
         Task<bool> ExistsByIdAsync(int id);
 

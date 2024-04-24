@@ -1,36 +1,43 @@
 ﻿namespace TennisShopSystem.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
 
-    using Data;
     using Data.Models;
     using ViewModels.ShoppingCart;
 
     using static TennisShopSystem.Web.Infrastructure.Extensions.SessionExtensions;
+    using static Common.NotificationMessagesConstants;
     using TennisShopSystem.Services.Data.Interfaces;
+    using TennisShopSystem.Web.ViewModels.Brand;
+    using TennisShopSystem.Web.ViewModels.Category;
+    using TennisShopSystem.DataTransferObjects.Brand;
+    using TennisShopSystem.DataTransferObjects.Category;
+    using TennisShopSystem.Web.Infrastructure.Extensions;
 
     public class ShoppingCartController : Controller
     {
-        private readonly TennisShopDbContext dbContext;
         private readonly IBrandService brandService;
         private readonly ICategoryService categoryService;
+        private readonly IProductService productService;
+        private readonly ISellerService sellerService;
 
-        public ShoppingCartController(TennisShopDbContext context, ICategoryService categoryService, IBrandService brandService)
+        public ShoppingCartController(
+            ICategoryService categoryService,
+            IBrandService brandService,
+            IProductService productService,
+            ISellerService sellerService)
         {
-            this.dbContext = context;
             this.categoryService = categoryService;
             this.brandService = brandService;
+            this.productService = productService;
+            this.sellerService = sellerService;
         }
-
-        [HttpGet]
+        
         public async Task<IActionResult> AddToCart(string id)
         {
-            var productToAdd = await this.dbContext
-                .Products
-                .FirstOrDefaultAsync(p => p.Id.ToString() == id);
+            bool productToAdd = await this.productService.ExistsByIdAsync(id);
 
-            if (productToAdd == null)
+            if (productToAdd == false)
             {
                 return this.RedirectToAction("Error", "Home");
             }
@@ -56,7 +63,7 @@
             {
                 currentCartItems.Add(new ShoppingCartItem()
                 {
-                    Product = productToAdd!,
+                    Product = await this.productService.GetProductByIdAsync(id),
                     ItemQuantity = 1
                 });
 
@@ -70,15 +77,43 @@
         
         public async Task<IActionResult> ViewCart()
         {
+            bool isSeller = await sellerService.SellerExistByUserIdAsync(this.User.GetId());
+
+            if (isSeller && !this.User.IsAdmin())
+            {
+                this.TempData[ErrorMessage] = "You must not be a seller in order to view the shopping cart!";
+
+                return this.RedirectToAction("Index", "Home");
+            }
+
             var currentCartItems = HttpContext.Session
                 .Get<List<ShoppingCartItem>>("Cart") ?? new List<ShoppingCartItem>();
+
+            IEnumerable<ProductSelectBrandFormDto> brands = await this.brandService.AllBrandsAsync();
+            IEnumerable<ProductSelectCategoryFormDto> categories = await this.categoryService.AllCategoriesAsync();
+
+            IEnumerable<ProductSelectBrandFormModel> modelBrands = brands
+                .Select(b => new ProductSelectBrandFormModel()
+                {
+                    Id = b.Id,
+                    Name = b.Name
+                })
+                .ToArray();
+
+            IEnumerable<ProductSelectCategoryFormModel> modelCategories = categories
+                .Select(c => new ProductSelectCategoryFormModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToArray();
 
             var cartViewModel = new ShoppingCartViewModel()
             {
                 CartItems = currentCartItems,
                 TotalPrice = currentCartItems.Sum(item => item.Product.Price * item.ItemQuantity),
-                Brands = await this.brandService.AllBrandsAsync(),
-                Categories = await this.categoryService.AllCategoriesAsync()
+                Brands = modelBrands,
+                Categories = modelCategories
             };
 
             return this.View(cartViewModel);

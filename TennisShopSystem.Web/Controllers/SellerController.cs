@@ -8,6 +8,7 @@
     using ViewModels.Seller;
 
     using static Common.NotificationMessagesConstants;
+    using TennisShopSystem.DataTransferObjects.Seller;
 
     [Authorize]
     public class SellerController : Controller
@@ -65,7 +66,12 @@
 
             try
             {
-                await this.sellerService.Create(userId, model);
+                BecomeSellerDto sellerDto = new()
+                {
+                    PhoneNumber = model.PhoneNumber
+                };
+
+                await this.sellerService.Create(userId, sellerDto);
             }
             catch (Exception)
             {

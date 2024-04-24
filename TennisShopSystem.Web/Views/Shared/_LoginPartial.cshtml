@@ -13,9 +13,12 @@
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="ViewCart">Cart</a>
-        </li>
+        if (!isUserSeller || this.User.IsAdmin())
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="ViewCart">Cart</a>
+            </li>
+        }
         if (!isUserSeller)
         {
             <li class="nav-item">

@@ -1,10 +1,9 @@
 ﻿namespace TennisShopSystem.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
-
+    using TennisShopSystem.DataTransferObjects;
     using TennisShopSystem.Services.Data.Interfaces;
-    using ViewModels.Home;
-
+    using TennisShopSystem.Web.ViewModels.Home;
     using static Common.GeneralApplicationConstants;
 
     public class HomeController : Controller
@@ -23,8 +22,22 @@
                 return this.RedirectToAction("Index", "Home", new { Area = AdminAreaName });
             }
 
-            IEnumerable<IndexViewModel> viewModel = 
+            IEnumerable<IndexModelDto> models = 
                 await this.productService.LastThreeProductsAsync();
+
+            List<IndexViewModel> viewModel = new();
+
+            foreach (IndexModelDto modelDto in models)
+            {
+                IndexViewModel model = new()
+                {
+                    Id = modelDto.Id,
+                    Title = modelDto.Title,
+                    ImageUrl = modelDto.ImageUrl
+                };
+
+                viewModel.Add(model);
+            }
 
             return View(viewModel);
         }

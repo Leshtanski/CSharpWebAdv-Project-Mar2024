@@ -10,6 +10,7 @@
     using Data;
     using static DatabaseSeeder;
     using Web.ViewModels.Category;
+    using TennisShopSystem.DataTransferObjects.Category;
 
     public class CategoryServiceTests
     {
@@ -96,7 +97,7 @@
                 }
             };
 
-            IEnumerable<ProductSelectCategoryFormModel> categories = await this.categoryService.AllCategoriesAsync();
+            IEnumerable<ProductSelectCategoryFormDto> categories = await this.categoryService.AllCategoriesAsync();
 
             var allDbCategories = categories.ToArray();
 

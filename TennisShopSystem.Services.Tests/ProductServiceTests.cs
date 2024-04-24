@@ -9,6 +9,8 @@
     using Web.ViewModels.Seller;
     
     using static DatabaseSeeder;
+    using TennisShopSystem.DataTransferObjects;
+    using TennisShopSystem.DataTransferObjects.Product;
 
     public class ProductServiceTests
     {
@@ -63,7 +65,7 @@
                 }
             };
 
-            IEnumerable<ProductAllViewModel> allSellerProductsDb =
+            IEnumerable<ProductAllDto> allSellerProductsDb =
                 await this.productService.AllBySellerIdAsync(Seller.Id.ToString());
 
             var allSellerProductsDbConverted = allSellerProductsDb.ToArray();
@@ -121,7 +123,7 @@
                 }
             };
 
-            IEnumerable<ProductAllViewModel> allUserItems 
+            IEnumerable<ProductAllDto> allUserItems 
                 = await this.productService.AllByUserIdAsync(RegisteredUser.Id.ToString());
 
             var allUserItemsConverted = allUserItems.ToArray();
@@ -258,7 +260,7 @@
 
             await this.dbContext.SaveChangesAsync();
 
-            ProductDetailsViewModel methodModel = await this.productService.GetDetailsByIdAsync(Product.Id.ToString());
+            ProductDetailsDto methodModel = await this.productService.GetDetailsByIdAsync(Product.Id.ToString());
 
             Assert.AreEqual(model.Id, methodModel.Id);
             Assert.AreEqual(model.Title, methodModel.Title);
@@ -283,7 +285,7 @@
             Product.IsAvailable = true;
             await this.dbContext.SaveChangesAsync();
 
-            ProductPreDeleteDetailsViewModel methodModel =
+            ProductPreDeleteDetailsDto methodModel =
                 await this.productService.GetProductForDeleteByIdAsync(Product.Id.ToString());
 
             Assert.AreEqual(model.Title, methodModel.Title);
@@ -311,7 +313,7 @@
                 BrandId = Product.BrandId
             };
 
-            ProductFormModel methodModel =
+            ProductFormDto methodModel =
                 await this.productService.GetProductForEditByIdAsync(Product.Id.ToString());
 
             Assert.AreEqual(model.Title, methodModel.Title);
@@ -374,7 +376,7 @@
                 }
             };
 
-            IEnumerable<IndexViewModel> methodModels =
+            IEnumerable<IndexModelDto> methodModels =
                 await this.productService.LastThreeProductsAsync();
 
             var methodModelsConverted = methodModels.ToArray();

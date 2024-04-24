@@ -8,6 +8,7 @@
     using Web.ViewModels.Brand;
 
     using static DatabaseSeeder;
+    using TennisShopSystem.DataTransferObjects.Brand;
 
     public class BrandServiceTests
     {
@@ -94,7 +95,7 @@
                 }
             };
 
-            IEnumerable<ProductSelectBrandFormModel> brands = await this.brandService.AllBrandsAsync();
+            IEnumerable<ProductSelectBrandFormDto> brands = await this.brandService.AllBrandsAsync();
 
             var allDbBrands = brands.ToArray();
 

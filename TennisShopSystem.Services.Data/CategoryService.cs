@@ -3,7 +3,7 @@
     using Microsoft.EntityFrameworkCore;
     using TennisShopSystem.Data;
     using Interfaces;
-    using Web.ViewModels.Category;
+    using TennisShopSystem.DataTransferObjects.Category;
 
     public class CategoryService : ICategoryService
     {
@@ -14,12 +14,12 @@
             this.dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<ProductSelectCategoryFormModel>> AllCategoriesAsync()
+        public async Task<IEnumerable<ProductSelectCategoryFormDto>> AllCategoriesAsync()
         {
-            IEnumerable<ProductSelectCategoryFormModel> allCategories = await this.dbContext
+            IEnumerable<ProductSelectCategoryFormDto> allCategories = await this.dbContext
                 .Categories
                 .AsNoTracking()
-                .Select(c => new ProductSelectCategoryFormModel
+                .Select(c => new ProductSelectCategoryFormDto
                 {
                     Id = c.Id,
                     Name = c.Name

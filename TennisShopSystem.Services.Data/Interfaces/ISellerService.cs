@@ -1,12 +1,12 @@
 ﻿namespace TennisShopSystem.Services.Data.Interfaces
 {
-    using Web.ViewModels.Seller;
+    using TennisShopSystem.DataTransferObjects.Seller;
 
     public interface ISellerService
     {
         Task<bool> SellerExistByUserIdAsync(string userId);
         Task<bool> SellerExistsByPhoneNumberAsync(string phoneNumber);
-        Task Create(string userId, BecomeSellerFormModel model);
+        Task Create(string userId, BecomeSellerDto model);
 
         Task<string?> GetSellerIdByUserIdAsync(string userId);
 

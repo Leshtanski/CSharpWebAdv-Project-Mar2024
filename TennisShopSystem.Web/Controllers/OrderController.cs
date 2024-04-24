@@ -1,28 +1,26 @@
 ﻿namespace TennisShopSystem.Web.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.AspNetCore.Mvc;
 
-    using Data;
     using Data.Models;
     using Infrastructure.Extensions;
     using ViewModels.OrderDetails;
     using TennisShopSystem.Services.Data.Interfaces;
 
     using static Common.NotificationMessagesConstants;
-    
+    using TennisShopSystem.DataTransferObjects.Order;
 
     [Authorize]
     public class OrderController : Controller
     {
-        private readonly TennisShopDbContext dbContext;
         private readonly ISellerService sellerService;
+        private readonly IOrderService orderService;
 
-        public OrderController(TennisShopDbContext dbContext, ISellerService sellerService)
+        public OrderController(ISellerService sellerService, IOrderService orderService)
         {
-            this.dbContext = dbContext;
             this.sellerService = sellerService;
+            this.orderService = orderService;
         }
 
         [HttpGet]
@@ -41,6 +39,12 @@
 
             var currentCartItems = HttpContext.Session
                 .Get<List<ShoppingCartItem>>("Cart") ?? new List<ShoppingCartItem>();
+
+            if (currentCartItems.Count == 0)
+            {
+                this.TempData[ErrorMessage] = "You cannot proceed to complete your purchase because your cart is empty!";
+                return this.RedirectToAction("ViewCart", "ShoppingCart");
+            }
 
             OrderDetailsFormModel model = new()
             {
@@ -80,7 +84,7 @@
                 model.TotalPrice += item.ItemQuantity * item.Product.Price;
             }
 
-            OrderDetails orderDetails = new()
+            OrderDetailsDto orderDto = new()
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
@@ -89,67 +93,28 @@
                 EmailAddress = model.EmailAddress,
                 Comment = model.Comment,
                 TotalPrice = model.TotalPrice,
-                OrderedOn = DateTime.UtcNow
+                Items = currentCartItems
             };
 
-            Order order = new()
+            string[] result = await this.orderService.CreateAndSaveOrderAsync(orderDto, userId);
+
+            if (result[0] == "Quantity")
             {
-                UserId = Guid.Parse(userId),
-                OrderDetailsId = orderDetails.Id
-            };
+                this.TempData[ErrorMessage] =
+                    $"You are trying to purchase more copies of {result[1]} than available!";
 
-            List<OrderedItem> orderedItems = new();
-
-            foreach (var item in model.Items)
-            {
-                OrderedItem orderedItem = new()
-                {
-                    ProductId = item.Product.Id.ToString(),
-                    OrderedQuantity = item.ItemQuantity,
-                    OrderDetailsId = orderDetails.Id
-                };
-
-                orderedItems.Add(orderedItem);
+                HttpContext.Session.Set("Cart", currentCartItems);
+                return RedirectToAction("ViewCart", "ShoppingCart");
             }
-
-            await this.dbContext.OrderedItems.AddRangeAsync(orderedItems);
-            await this.dbContext.OrdersDetails.AddAsync(orderDetails);
-            await this.dbContext.Orders.AddAsync(order);
-
-            foreach (var item in currentCartItems)
+            else if (result[0] == "Error")
             {
-                Product productToDecreaseQuantity = await this.dbContext
-                    .Products
-                    .FirstAsync(p => p.Id == item.Product.Id);
-
-                if (productToDecreaseQuantity.AvailableQuantity - item.ItemQuantity < 0)
-                {
-                    this.TempData[ErrorMessage] = 
-                        $"You are trying to purchase more copies of {productToDecreaseQuantity.Title} than available!";
-
-                    HttpContext.Session.Set("Cart", currentCartItems);
-                    return RedirectToAction("ViewCart", "ShoppingCart");
-                }
-
-                try
-                {
-                    productToDecreaseQuantity.AvailableQuantity -= item.ItemQuantity;
-
-                    if (productToDecreaseQuantity.AvailableQuantity == 0)
-                    {
-                        productToDecreaseQuantity.IsAvailable = false;
-                    }
-                }
-                catch (Exception)
-                {
-                    HttpContext.Session.Set("Cart", currentCartItems);
-                    return this.GeneralError();
-                }
+                HttpContext.Session.Set("Cart", currentCartItems);
+                return this.GeneralError();
             }
-
-            await this.dbContext.SaveChangesAsync();
-
-            model.OrderId = order.Id;
+            else if (result[0] == "Success")
+            {
+                model.OrderId = int.Parse(result[1]);
+            }
 
             HttpContext.Session.Set("Cart", currentCartItems);
 

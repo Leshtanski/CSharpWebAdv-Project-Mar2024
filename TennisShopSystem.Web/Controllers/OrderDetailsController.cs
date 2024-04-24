@@ -2,40 +2,62 @@
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
 
-    using Data;
     using Data.Models;
     using Infrastructure.Extensions;
     using ViewModels.OrderDetails;
     using TennisShopSystem.Services.Data.Interfaces;
 
     using static Common.NotificationMessagesConstants;
+    using TennisShopSystem.Web.ViewModels.Category;
+    using TennisShopSystem.Web.ViewModels.Brand;
+    using TennisShopSystem.DataTransferObjects.Order;
+    using TennisShopSystem.DataTransferObjects.Brand;
+    using TennisShopSystem.DataTransferObjects.Category;
 
     [Authorize]
     public class OrderDetailsController : Controller
     {
-        private readonly TennisShopDbContext dbContext;
         private readonly ISellerService sellerService;
         private readonly IBrandService brandService;
         private readonly ICategoryService categoryService;
+        private readonly IOrderService orderService;
 
         public OrderDetailsController(
-                TennisShopDbContext dbContext, 
                 ISellerService sellerService,
                 IBrandService brandService,
-                ICategoryService categoryService)
+                ICategoryService categoryService,
+                IOrderService orderService)
         {
-            this.dbContext = dbContext;
             this.sellerService = sellerService;
             this.brandService = brandService;
             this.categoryService = categoryService;
+            this.orderService = orderService;
         }
 
         public async Task<IActionResult> CurrentOrderDetails(OrderDetailsFormModel formModel)
         {
             var currentCartItems = HttpContext.Session
                 .Get<List<ShoppingCartItem>>("Cart") ?? new List<ShoppingCartItem>();
+
+            IEnumerable<ProductSelectBrandFormDto> brands = await this.brandService.AllBrandsAsync();
+            IEnumerable<ProductSelectCategoryFormDto> categories = await this.categoryService.AllCategoriesAsync();
+
+            IEnumerable<ProductSelectBrandFormModel> modelBrands = brands
+                .Select(b => new ProductSelectBrandFormModel()
+                {
+                    Id = b.Id,
+                    Name = b.Name
+                })
+                .ToArray();
+
+            IEnumerable<ProductSelectCategoryFormModel> modelCategories = categories
+                .Select(c => new ProductSelectCategoryFormModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToArray();
 
             OrderDetailsViewModel model = new()
             {
@@ -48,8 +70,8 @@
                 Comment = formModel.Comment,
                 TotalPrice = formModel.TotalPrice,
                 Items = currentCartItems,
-                Categories = await this.categoryService.AllCategoriesAsync(),
-                Brands = await this.brandService.AllBrandsAsync()
+                Categories = modelCategories,
+                Brands = modelBrands
             };
 
             HttpContext.Session.Set("Cart", new List<ShoppingCartItem>());
@@ -70,75 +92,47 @@
                 return this.RedirectToAction("Index", "Home");
             }
 
-            List<Order> orders = await this.dbContext
-                .Orders
-                .Where(o => o.UserId.ToString() == userId)
-                .ToListAsync();
+            IEnumerable<ProductSelectBrandFormDto> brands = await this.brandService.AllBrandsAsync();
+            IEnumerable<ProductSelectCategoryFormDto> categories = await this.categoryService.AllCategoriesAsync();
 
-            List<OrderDetails> ordersDetails = new();
+            IEnumerable<ProductSelectBrandFormModel> modelBrands = brands
+                .Select(b => new ProductSelectBrandFormModel()
+                {
+                    Id = b.Id,
+                    Name = b.Name
+                })
+                .ToArray();
 
-            foreach (var order in orders)
-            {
-                OrderDetails orderDetails = await this.dbContext
-                    .OrdersDetails
-                    .FirstAsync(od => od.Id == order.OrderDetailsId);
+            IEnumerable<ProductSelectCategoryFormModel> modelCategories = categories
+                .Select(c => new ProductSelectCategoryFormModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToArray();
 
-                ordersDetails.Add(orderDetails);
-            }
-
-            List<OrderedItem> allOrderedItems = new();
-
-            foreach (var orderDetail in ordersDetails)
-            {
-                List<OrderedItem> orderedItems = await this.dbContext
-                    .OrderedItems
-                    .Where(oi => oi.OrderDetailsId == orderDetail.Id)
-                    .ToListAsync();
-
-                allOrderedItems.AddRange(orderedItems);
-            }
+            AllOrdersDto ordersDto = await this.orderService.GetAllOrdersByUserIdAsync(userId);
 
             AllOrdersViewModel viewModel = new();
 
-            foreach (var order in orders)
+            foreach (var order in ordersDto.Orders)
             {
-                foreach (var orderDetails in ordersDetails.Where(od => od.Id == order.OrderDetailsId))
+                OrderDetailsViewModel model = new()
                 {
-                    OrderDetailsViewModel model = new()
-                    {
-                        Id = order.Id,
-                        FirstName = orderDetails.FirstName,
-                        LastName = orderDetails.LastName,
-                        Address = orderDetails.Address,
-                        PhoneNumber = orderDetails.PhoneNumber,
-                        EmailAddress = orderDetails.EmailAddress,
-                        TotalPrice = orderDetails.TotalPrice,
-                        Items = new List<ShoppingCartItem>(),
-                        OrderRegisteredOn = orderDetails.OrderedOn.ToString(),
-                        Categories = await this.categoryService.AllCategoriesAsync(),
-                        Brands = await this.brandService.AllBrandsAsync()
-                    };
+                    Id = order.Id,
+                    FirstName = order.FirstName,
+                    LastName = order.LastName,
+                    Address = order.Address,
+                    PhoneNumber = order.PhoneNumber,
+                    EmailAddress = order.EmailAddress,
+                    TotalPrice = order.TotalPrice,
+                    Items = order.Items,
+                    OrderRegisteredOn = order.OrderRegisteredOn,
+                    Categories = modelCategories,
+                    Brands = modelBrands
+                };
 
-                    foreach (var orderedItem in allOrderedItems.Where(oi => oi.OrderDetailsId == orderDetails.Id))
-                    {
-                        var productToShoppingCartItem = await this.dbContext
-                            .Products
-                            .FirstOrDefaultAsync(pts => pts.Id.ToString() == orderedItem.ProductId);
-
-                        ShoppingCartItem shoppingCartItem = new()
-                        {
-                            Product = productToShoppingCartItem!,
-                            ItemQuantity = orderedItem.OrderedQuantity
-                        };
-
-
-                        model.Items.Add(shoppingCartItem);
-                    }
-
-                    viewModel.Orders.Add(model);
-
-                }
-                
+                viewModel.Orders.Add(model);
             }
 
             return View(viewModel);

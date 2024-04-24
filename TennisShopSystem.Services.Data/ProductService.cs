@@ -8,10 +8,12 @@
     using TennisShopSystem.Data;
     using TennisShopSystem.Data.Models;
     using Interfaces;
-    using Web.ViewModels.Home;
     using Web.ViewModels.Product;
-    using Web.ViewModels.Product.Enums;
     using Web.ViewModels.Seller;
+    using TennisShopSystem.DataTransferObjects;
+    using TennisShopSystem.DataTransferObjects.Product.Enums;
+    using TennisShopSystem.DataTransferObjects.Product;
+    using TennisShopSystem.DataTransferObjects.Seller;
 
     public class ProductService : IProductService
     {
@@ -22,7 +24,7 @@
             this.dbContext = dbContext;
         }
 
-        public async Task<AllProductsFilteredAndPagedServiceModel> AllAsync(AllProductQueryModel queryModel)
+        public async Task<AllProductsFilteredAndPagedDto> AllAsync(AllProductQueryDto queryModel)
         {
             IQueryable<Product> productsQuery = this.dbContext
                 .Products
@@ -58,44 +60,11 @@
                 _ => productsQuery.OrderByDescending(p => p.CreatedOn)
             };
 
-            IEnumerable<ProductAllViewModel> allProducts = await productsQuery
+            IEnumerable<ProductAllDto> allProducts = await productsQuery
                 .Where(p => p.IsAvailable)
                 .Skip((queryModel.CurrentPage - 1) * queryModel.ProductsPerPage)
                 .Take(queryModel.ProductsPerPage)
-                .Select(p => new ProductAllViewModel
-                {
-                    Id = p.Id.ToString(),
-                    Title = p.Title,
-                    Description = p.Description,
-                    ImageUrl = p.ImageUrl,
-                    Price = p.Price,
-                    AvailableQuantity = p.AvailableQuantity
-                })
-                .ToArrayAsync();
-
-            foreach (ProductAllViewModel model in allProducts)
-            {
-                model.SoldItems = await this.dbContext
-                   .OrderedItems
-                   .Where(oi => oi.ProductId == model.Id)
-                   .CountAsync();
-            }
-
-            int totalProducts = productsQuery.Count();
-
-            return new AllProductsFilteredAndPagedServiceModel()
-            {
-                TotalProductsCount = totalProducts,
-                Products = allProducts
-            };
-        }
-
-        public async Task<IEnumerable<ProductAllViewModel>> AllBySellerIdAsync(string sellerId)
-        {
-            IEnumerable<ProductAllViewModel> allSellerProducts = await this.dbContext
-                .Products
-                .Where(p => p.SellerId.ToString() == sellerId)
-                .Select(p => new ProductAllViewModel
+                .Select(p => new ProductAllDto
                 {
                     Id = p.Id.ToString(),
                     Title = p.Title,
@@ -107,7 +76,41 @@
                 })
                 .ToArrayAsync();
 
-            foreach (ProductAllViewModel model in allSellerProducts)
+            foreach (ProductAllDto model in allProducts)
+            {
+                model.SoldItems = await this.dbContext
+                   .OrderedItems
+                   .Where(oi => oi.ProductId == model.Id)
+                   .CountAsync();
+            }
+
+            int totalProducts = productsQuery.Count();
+
+            return new AllProductsFilteredAndPagedDto()
+            {
+                TotalProductsCount = totalProducts,
+                Products = allProducts
+            };
+        }
+
+        public async Task<IEnumerable<ProductAllDto>> AllBySellerIdAsync(string sellerId)
+        {
+            IEnumerable<ProductAllDto> allSellerProducts = await this.dbContext
+                .Products
+                .Where(p => p.SellerId.ToString() == sellerId)
+                .Select(p => new ProductAllDto
+                {
+                    Id = p.Id.ToString(),
+                    Title = p.Title,
+                    Description = p.Description,
+                    ImageUrl = p.ImageUrl,
+                    Price = p.Price,
+                    AvailableQuantity = p.AvailableQuantity,
+                    IsAvailable = p.IsAvailable
+                })
+                .ToArrayAsync();
+
+            foreach (ProductAllDto model in allSellerProducts)
             {
                 model.SoldItems = await this.dbContext
                    .OrderedItems
@@ -118,7 +121,7 @@
             return allSellerProducts;
         }
 
-        public async Task<IEnumerable<ProductAllViewModel>> AllByUserIdAsync(string userId)
+        public async Task<IEnumerable<ProductAllDto>> AllByUserIdAsync(string userId)
         {
             List<Order> orders = await this.dbContext
                 .Orders
@@ -148,7 +151,7 @@
                 orderedItems.AddRange(items);
             }
 
-            List<ProductAllViewModel> allUserProducts = new();
+            List<ProductAllDto> allUserProducts = new();
 
             foreach (OrderedItem item in orderedItems)
             {
@@ -156,7 +159,7 @@
                     .Products
                     .FindAsync(Guid.Parse(item.ProductId));
 
-                allUserProducts.Add(new ProductAllViewModel
+                allUserProducts.Add(new ProductAllDto
                 {
                     Id = productToAdd!.Id.ToString(),
                     Title = productToAdd.Title,
@@ -171,7 +174,7 @@
             return allUserProducts;
         }
 
-        public async Task<string> CreateAndReturnIdAsync(ProductFormModel formModel, string sellerId)
+        public async Task<string> CreateAndReturnIdAsync(ProductFormDto formModel, string sellerId)
         {
             Product newProduct = new Product()
             {
@@ -241,7 +244,7 @@
             return result;
         }
 
-        public async Task<ProductDetailsViewModel> GetDetailsByIdAsync(string productId)
+        public async Task<ProductDetailsDto> GetDetailsByIdAsync(string productId)
         {
             Product product = await this.dbContext
                 .Products
@@ -251,7 +254,7 @@
                 .ThenInclude(s => s.User)
                 .FirstAsync(p => p.Id.ToString() == productId);
 
-            return new ProductDetailsViewModel()
+            return new ProductDetailsDto()
             {
                 Id = product.Id.ToString(),
                 Title = product.Title,
@@ -260,7 +263,7 @@
                 Price = product.Price,
                 Brand = product.Brand.Name,
                 Category = product.Category.Name,
-                Seller = new SellerInfoOnProductViewModel
+                Seller = new SellerInfoOnProductDto
                 {
                     Email = product.Seller.User.Email,
                     PhoneNumber = product.Seller.PhoneNumber
@@ -268,21 +271,28 @@
             };
         }
 
-        public async Task<ProductPreDeleteDetailsViewModel> GetProductForDeleteByIdAsync(string productId)
+        public async Task<Product> GetProductByIdAsync(string productId)
+        {
+            return await this.dbContext
+                .Products
+                .FirstAsync(p => p.Id.ToString() == productId);
+        }
+
+        public async Task<ProductPreDeleteDetailsDto> GetProductForDeleteByIdAsync(string productId)
         {
             Product product = await this.dbContext
                 .Products
                 .Where(p => p.IsAvailable)
                 .FirstAsync(p => p.Id.ToString() == productId);
 
-            return new ProductPreDeleteDetailsViewModel()
+            return new ProductPreDeleteDetailsDto()
             {
                 Title = product.Title,
                 ImageUrl = product.ImageUrl
             };
         }
         
-        public async Task<ProductFormModel> GetProductForEditByIdAsync(string productId)
+        public async Task<ProductFormDto> GetProductForEditByIdAsync(string productId)
         {
             Product product = await this.dbContext
                 .Products
@@ -290,7 +300,7 @@
                 .Include(p => p.Brand)
                 .FirstAsync(p => p.Id.ToString() == productId);
 
-            return new ProductFormModel
+            return new ProductFormDto
             {
                 Title = product.Title,
                 Description = product.Description,
@@ -311,14 +321,14 @@
             return product.SellerId.ToString() == sellerId;
         }
 
-        public async Task<IEnumerable<IndexViewModel>> LastThreeProductsAsync()
+        public async Task<IEnumerable<IndexModelDto>> LastThreeProductsAsync()
         {
-            IEnumerable<IndexViewModel> lastThreeProducts = await dbContext
+            IEnumerable<IndexModelDto> lastThreeProducts = await dbContext
                 .Products
                 .Where(p => p.IsAvailable)
                 .OrderByDescending(p => p.CreatedOn)
                 .Take(3)
-                .Select(p => new IndexViewModel()
+                .Select(p => new IndexModelDto()
                 {
                     Id = p.Id.ToString(),
                     Title = p.Title,

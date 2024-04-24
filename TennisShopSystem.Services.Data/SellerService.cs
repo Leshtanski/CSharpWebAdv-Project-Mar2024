@@ -6,7 +6,7 @@
     using TennisShopSystem.Data;
     using TennisShopSystem.Data.Models;
     using Interfaces;
-    using Web.ViewModels.Seller;
+    using TennisShopSystem.DataTransferObjects.Seller;
 
     public class SellerService : ISellerService
     {
@@ -17,7 +17,7 @@
             this.dbContext = dbContext;
         }
 
-        public async Task Create(string userId, BecomeSellerFormModel model)
+        public async Task Create(string userId, BecomeSellerDto model)
         {
             Seller newSeller = new Seller
             {

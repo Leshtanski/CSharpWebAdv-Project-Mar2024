@@ -1,8 +1,7 @@
 ﻿namespace TennisShopSystem.Web.ViewModels.Product
 {
     using System.ComponentModel.DataAnnotations;
-    using Enums;
-
+    using TennisShopSystem.Web.ViewModels.Product.Enums;
     using static Common.GeneralApplicationConstants;
 
     public class AllProductQueryModel
@@ -14,7 +13,7 @@
 
             this.Categories = new HashSet<string>();
             this.Brands = new HashSet<string>();
-            this.Products = new HashSet<ProductAllViewModel>();
+            this.Products = new List<ProductAllViewModel>();
         }
 
         public string? Category { get; set; }
@@ -38,6 +37,6 @@
 
         public IEnumerable<string> Brands { get; set; }
 
-        public IEnumerable<ProductAllViewModel> Products { get; set; }
+        public List<ProductAllViewModel> Products { get; set; }
     }
 }

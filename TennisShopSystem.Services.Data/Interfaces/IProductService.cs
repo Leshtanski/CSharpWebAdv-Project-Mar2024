@@ -2,35 +2,39 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Web.ViewModels.Home;
+    using TennisShopSystem.Data.Models;
+    using TennisShopSystem.DataTransferObjects;
+    using TennisShopSystem.DataTransferObjects.Product;
     using Web.ViewModels.Product;
 
     public interface IProductService
     {
-        Task<IEnumerable<IndexViewModel>> LastThreeProductsAsync();
+        Task<IEnumerable<IndexModelDto>> LastThreeProductsAsync();
 
-        Task<string> CreateAndReturnIdAsync(ProductFormModel formModel, string sellerId);
+        Task<string> CreateAndReturnIdAsync(ProductFormDto formModel, string sellerId);
 
-        Task<AllProductsFilteredAndPagedServiceModel> AllAsync(AllProductQueryModel queryModel);
+        Task<AllProductsFilteredAndPagedDto> AllAsync(AllProductQueryDto queryModel);
 
-        Task<IEnumerable<ProductAllViewModel>> AllBySellerIdAsync(string sellerId);
+        Task<IEnumerable<ProductAllDto>> AllBySellerIdAsync(string sellerId);
 
-        Task<IEnumerable<ProductAllViewModel>> AllByUserIdAsync(string userId);
+        Task<IEnumerable<ProductAllDto>> AllByUserIdAsync(string userId);
 
         Task<bool> ExistsByIdAsync(string productId);
 
-        Task<ProductDetailsViewModel> GetDetailsByIdAsync(string productId);
+        Task<ProductDetailsDto> GetDetailsByIdAsync(string productId);
 
-        Task<ProductFormModel> GetProductForEditByIdAsync(string productId);
+        Task<ProductFormDto> GetProductForEditByIdAsync(string productId);
 
         Task<bool> IsSellerWithIdOwnerOfProductWithIdAsync(string productId, string sellerId);
 
         Task EditProductByIdAndFormModelAsync(string productId, ProductFormModel formModel);
 
-        Task<ProductPreDeleteDetailsViewModel> GetProductForDeleteByIdAsync(string productId);
+        Task<ProductPreDeleteDetailsDto> GetProductForDeleteByIdAsync(string productId);
 
         Task DeleteProductByIdAsync(string productId);
 
         Task<bool> ExistsBySellerIdAsync(string productId);
+
+        Task<Product> GetProductByIdAsync(string productId);
     }
 }

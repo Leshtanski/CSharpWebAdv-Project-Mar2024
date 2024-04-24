@@ -6,9 +6,15 @@
     using TennisShopSystem.Services.Data.Interfaces;
     using Infrastructure.Extensions;
     using ViewModels.Product;
+    using TennisShopSystem.DataTransferObjects.Product;
 
     using static Common.GeneralApplicationConstants;
     using static Common.NotificationMessagesConstants;
+    using TennisShopSystem.Web.ViewModels.Seller;
+    using TennisShopSystem.Web.ViewModels.Category;
+    using TennisShopSystem.Web.ViewModels.Brand;
+    using TennisShopSystem.DataTransferObjects.Brand;
+    using TennisShopSystem.DataTransferObjects.Category;
 
     [Authorize]
     public class ProductController : Controller
@@ -29,16 +35,34 @@
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> All([FromQuery]AllProductQueryModel queryModel)
+        public async Task<IActionResult> All([FromQuery]AllProductQueryDto queryModel)
         {
-            AllProductsFilteredAndPagedServiceModel serviceModel = await this.productService.AllAsync(queryModel);
-            
-            queryModel.Products = serviceModel.Products;
-            queryModel.TotalProducts = serviceModel.TotalProductsCount;
-            queryModel.Categories = await this.categoryService.AllCategoryNamesAsync();
-            queryModel.Brands = await this.brandService.AllBrandNamesAsync();
+            AllProductsFilteredAndPagedDto serviceModel = await this.productService.AllAsync(queryModel);
 
-            return this.View(queryModel);
+            AllProductQueryModel model = new();
+
+            foreach (ProductAllDto modelDto in serviceModel.Products)
+            {
+                ProductAllViewModel viewModel = new()
+                {
+                    Id = modelDto.Id,
+                    Title = modelDto.Title,
+                    Description = modelDto.Description,
+                    ImageUrl = modelDto.ImageUrl,
+                    Price = modelDto.Price,
+                    AvailableQuantity = modelDto.AvailableQuantity,
+                    IsAvailable = modelDto.IsAvailable,
+                    SoldItems = modelDto.SoldItems
+                };
+
+                model.Products.Add(viewModel);
+            }
+            
+            model.TotalProducts = serviceModel.TotalProductsCount;
+            model.Categories = await this.categoryService.AllCategoryNamesAsync();
+            model.Brands = await this.brandService.AllBrandNamesAsync();
+
+            return this.View(model);
         }
 
         [HttpGet]
@@ -55,11 +79,29 @@
 
             try
             {
-                ProductFormModel model = new()
-                {
-                    Brands = await this.brandService.AllBrandsAsync(),
-                    Categories = await this.categoryService.AllCategoriesAsync()
-                };
+                ProductFormModel model = new();
+
+                IEnumerable<ProductSelectBrandFormDto> brands = await this.brandService.AllBrandsAsync();
+                IEnumerable<ProductSelectCategoryFormDto> categories = await this.categoryService.AllCategoriesAsync();
+
+                IEnumerable<ProductSelectBrandFormModel> modelBrands = brands
+                    .Select(b => new ProductSelectBrandFormModel()
+                    {
+                        Id = b.Id,
+                        Name = b.Name
+                    })
+                    .ToArray();
+
+                IEnumerable<ProductSelectCategoryFormModel> modelCategories = categories
+                    .Select(c => new ProductSelectCategoryFormModel()
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    })
+                    .ToArray();
+
+                model.Brands = modelBrands;
+                model.Categories = modelCategories;
 
                 return View(model);
             }
@@ -99,8 +141,27 @@
 
             if (!ModelState.IsValid)
             {
-                model.Categories = await this.categoryService.AllCategoriesAsync();
-                model.Brands = await this.brandService.AllBrandsAsync();
+                IEnumerable<ProductSelectBrandFormDto> brands = await this.brandService.AllBrandsAsync();
+                IEnumerable<ProductSelectCategoryFormDto> categories = await this.categoryService.AllCategoriesAsync();
+
+                IEnumerable<ProductSelectBrandFormModel> modelBrands = brands
+                    .Select(b => new ProductSelectBrandFormModel()
+                    {
+                        Id = b.Id,
+                        Name = b.Name
+                    })
+                    .ToArray();
+
+                IEnumerable<ProductSelectCategoryFormModel> modelCategories = categories
+                    .Select(c => new ProductSelectCategoryFormModel()
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    })
+                    .ToArray();
+
+                model.Brands = modelBrands;
+                model.Categories = modelCategories;
 
                 return this.View(model);
             }
@@ -110,7 +171,18 @@
                 string? sellerId = await this.sellerService
                     .GetSellerIdByUserIdAsync(this.User.GetId()!);
 
-                string productId = await this.productService.CreateAndReturnIdAsync(model, sellerId!);
+                ProductFormDto productFormDto = new()
+                {
+                    Title = model.Title,
+                    Description = model.Description,
+                    ImageUrl = model.ImageUrl,
+                    Price = model.Price,
+                    AvailableQuantity = model.AvailableQuantity,
+                    BrandId = model.BrandId,
+                    CategoryId = model.CategoryId
+                };
+
+                string productId = await this.productService.CreateAndReturnIdAsync(productFormDto, sellerId!);
 
                 this.TempData[SuccessMessage] = "Product was added successfully!";
 
@@ -121,8 +193,27 @@
                 ModelState.AddModelError(string.Empty, 
                     "Unexpected error occurred while trying to add your new product! Please try again later or contact administrator!");
 
-                model.Categories = await this.categoryService.AllCategoriesAsync();
-                model.Brands = await this.brandService.AllBrandsAsync();
+                IEnumerable<ProductSelectBrandFormDto> brands = await this.brandService.AllBrandsAsync();
+                IEnumerable<ProductSelectCategoryFormDto> categories = await this.categoryService.AllCategoriesAsync();
+
+                IEnumerable<ProductSelectBrandFormModel> modelBrands = brands
+                    .Select(b => new ProductSelectBrandFormModel()
+                    {
+                        Id = b.Id,
+                        Name = b.Name
+                    })
+                    .ToArray();
+
+                IEnumerable<ProductSelectCategoryFormModel> modelCategories = categories
+                    .Select(c => new ProductSelectCategoryFormModel()
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    })
+                    .ToArray();
+
+                model.Brands = modelBrands;
+                model.Categories = modelCategories;
 
                 return this.View(model);
             }
@@ -154,8 +245,28 @@
 
             try
             {
-                ProductDetailsViewModel viewModel = await this.productService
+                ProductDetailsDto detailsDto = await this.productService
                 .GetDetailsByIdAsync(id);
+
+                SellerInfoOnProductViewModel seller = new()
+                {
+                    Email = detailsDto.Seller.Email,
+                    PhoneNumber = detailsDto.Seller.PhoneNumber
+                };
+
+                ProductDetailsViewModel viewModel = new()
+                {
+                    Id = detailsDto.Id,
+                    Title = detailsDto.Title,
+                    Description = detailsDto.Description,
+                    ImageUrl = detailsDto.ImageUrl,
+                    Price = detailsDto.Price,
+                    AvailableQuantity = detailsDto.AvailableQuantity,
+                    IsAvailable = detailsDto.IsAvailable,
+                    Category = detailsDto.Category,
+                    Brand = detailsDto.Brand,
+                    Seller = seller
+                };
 
                 return View(viewModel);
             }
@@ -202,11 +313,42 @@
 
             try
             {
-                ProductFormModel formModel = await this.productService
+                ProductFormDto productDto = await this.productService
                 .GetProductForEditByIdAsync(id);
 
-                formModel.Categories = await this.categoryService.AllCategoriesAsync();
-                formModel.Brands = await this.brandService.AllBrandsAsync();
+                ProductFormModel formModel = new()
+                {
+                    Title = productDto.Title,
+                    Description = productDto.Description,
+                    ImageUrl = productDto.ImageUrl,
+                    Price = productDto.Price,
+                    AvailableQuantity = productDto.AvailableQuantity,
+                    IsAvailable = productDto.IsAvailable,
+                    BrandId = productDto.BrandId,
+                    CategoryId = productDto.CategoryId
+                };
+
+                IEnumerable<ProductSelectBrandFormDto> brands = await this.brandService.AllBrandsAsync();
+                IEnumerable<ProductSelectCategoryFormDto> categories = await this.categoryService.AllCategoriesAsync();
+
+                IEnumerable<ProductSelectBrandFormModel> modelBrands = brands
+                    .Select(b => new ProductSelectBrandFormModel()
+                    {
+                        Id = b.Id,
+                        Name = b.Name
+                    })
+                    .ToArray();
+
+                IEnumerable<ProductSelectCategoryFormModel> modelCategories = categories
+                    .Select(c => new ProductSelectCategoryFormModel()
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    })
+                    .ToArray();
+
+                formModel.Categories = modelCategories;
+                formModel.Brands = modelBrands;
 
                 return this.View(formModel);
             }
@@ -221,9 +363,28 @@
         {
             if (!this.ModelState.IsValid)
             {
-                model.Categories = await this.categoryService.AllCategoriesAsync();
-                model.Brands = await this.brandService.AllBrandsAsync();
+                IEnumerable<ProductSelectBrandFormDto> brands = await this.brandService.AllBrandsAsync();
+                IEnumerable<ProductSelectCategoryFormDto> categories = await this.categoryService.AllCategoriesAsync();
 
+                IEnumerable<ProductSelectBrandFormModel> modelBrands = brands
+                    .Select(b => new ProductSelectBrandFormModel()
+                    {
+                        Id = b.Id,
+                        Name = b.Name
+                    })
+                    .ToArray();
+
+                IEnumerable<ProductSelectCategoryFormModel> modelCategories = categories
+                    .Select(c => new ProductSelectCategoryFormModel()
+                    {
+                        Id = c.Id,
+                        Name = c.Name
+                    })
+                    .ToArray();
+
+                model.Categories = modelCategories;
+                model.Brands = modelBrands;
+                
                 return this.View(model);
             }
 
@@ -266,9 +427,14 @@
             catch (Exception)
             {
                 this.ModelState.AddModelError(string.Empty, "An unexpected error occurred while trying to update your product! Please try again later or contact administrator!");
-                
-                model.Categories = await this.categoryService.AllCategoriesAsync();
-                model.Brands = await this.brandService.AllBrandsAsync();
+
+                ProductFormDto productDto = new();
+
+                productDto.Categories = await this.categoryService.AllCategoriesAsync();
+                productDto.Brands = await this.brandService.AllBrandsAsync();
+
+                model.Categories = (IEnumerable<ProductSelectCategoryFormModel>)productDto.Categories;
+                model.Brands = (IEnumerable<ProductSelectBrandFormModel>)productDto.Brands;
 
                 return this.View(model);
             }
@@ -315,8 +481,14 @@
 
             try
             {
-                ProductPreDeleteDetailsViewModel viewModel =
+                ProductPreDeleteDetailsDto productDto =
                     await this.productService.GetProductForDeleteByIdAsync(id);
+
+                ProductPreDeleteDetailsViewModel viewModel = new()
+                {
+                    Title = productDto.Title,
+                    ImageUrl = productDto.ImageUrl
+                };
 
                 return this.View(viewModel);
             }
@@ -400,7 +572,26 @@
             {
                 string? sellerId = await this.sellerService.GetSellerIdByUserIdAsync(userId);
 
-                myProducts.AddRange(await this.productService.AllBySellerIdAsync(sellerId!));
+                List<ProductAllDto> myDtoProducts = new();
+
+                myDtoProducts.AddRange(await this.productService.AllBySellerIdAsync(sellerId!));
+
+                foreach (ProductAllDto productDto in myDtoProducts)
+                {
+                    ProductAllViewModel viewModel = new()
+                    {
+                        Id = productDto.Id,
+                        Title = productDto.Title,
+                        Description = productDto.Description,
+                        ImageUrl = productDto.ImageUrl,
+                        Price = productDto.Price,
+                        AvailableQuantity = productDto.AvailableQuantity,
+                        IsAvailable = productDto.IsAvailable,
+                        SoldItems = productDto.SoldItems
+                    };
+
+                    myProducts.Add(viewModel);
+                }
 
                 return this.View(myProducts);
             }
