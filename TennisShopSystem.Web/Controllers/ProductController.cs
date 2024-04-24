@@ -428,15 +428,25 @@
                 return this.RedirectToAction("Mine", "Product");
             }
 
+            ProductFormDto productDto = new()
+            {
+                Title = model.Title,
+                Description = model.Description,
+                ImageUrl = model.ImageUrl,
+                Price = model.Price,
+                AvailableQuantity = model.AvailableQuantity,
+                IsAvailable = model.IsAvailable,
+                BrandId = model.BrandId,
+                CategoryId = model.CategoryId
+            };
+
             try
             {
-                await this.productService.EditProductByIdAndFormModelAsync(id, model);
+                await this.productService.EditProductByIdAndFormModelAsync(id, productDto);
             }
             catch (Exception)
             {
                 this.ModelState.AddModelError(string.Empty, "An unexpected error occurred while trying to update your product! Please try again later or contact administrator!");
-
-                ProductFormDto productDto = new();
 
                 productDto.Categories = await this.categoryService.AllCategoriesAsync();
                 productDto.Brands = await this.brandService.AllBrandsAsync();

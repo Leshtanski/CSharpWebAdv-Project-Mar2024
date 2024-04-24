@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TennisShopSystem.Common\TennisShopSystem.Common.csproj" />
     <ProjectReference Include="..\TennisShopSystem.Data.Models\TennisShopSystem.Data.Models.csproj" />
+    <ProjectReference Include="..\TennisShopSystem.DataTransferObjects\TennisShopSystem.DataTransferObjects.csproj" />
     <ProjectReference Include="..\TennisShopSystem.Data\TennisShopSystem.Data.csproj" />
     <ProjectReference Include="..\TennisShopSystem.Services.Data\TennisShopSystem.Services.Data.csproj" />
     <ProjectReference Include="..\TennisShopSystem.Web.Infrastructure\TennisShopSystem.Web.Infrastructure.csproj" />

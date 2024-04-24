@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TennisShopSystem.Common\TennisShopSystem.Common.csproj" />
     <ProjectReference Include="..\TennisShopSystem.Services.Data\TennisShopSystem.Services.Data.csproj" />
   </ItemGroup>
 

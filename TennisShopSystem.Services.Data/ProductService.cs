@@ -8,7 +8,6 @@
     using TennisShopSystem.Data;
     using TennisShopSystem.Data.Models;
     using Interfaces;
-    using Web.ViewModels.Product;
     using TennisShopSystem.DataTransferObjects;
     using TennisShopSystem.DataTransferObjects.Product.Enums;
     using TennisShopSystem.DataTransferObjects.Product;
@@ -206,7 +205,7 @@
             await this.dbContext.SaveChangesAsync();
         }
         
-        public async Task EditProductByIdAndFormModelAsync(string productId, ProductFormModel formModel)
+        public async Task EditProductByIdAndFormModelAsync(string productId, ProductFormDto formModel)
         {
             Product product = await this.dbContext
                 .Products

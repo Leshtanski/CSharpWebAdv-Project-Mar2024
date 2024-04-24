@@ -165,7 +165,7 @@
         [Test]
         public async Task EditProductByIdAndFormModelAsyncShouldChangeData()
         {
-            ProductFormModel model = new()
+            ProductFormDto model = new()
             {
                 Title = "Nike Shoes",
                 Description = "These are high quality Nike Tennis Shoes! Only the pro's play with them!",

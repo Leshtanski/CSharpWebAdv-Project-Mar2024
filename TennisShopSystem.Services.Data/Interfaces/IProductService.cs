@@ -5,7 +5,6 @@
     using TennisShopSystem.Data.Models;
     using TennisShopSystem.DataTransferObjects;
     using TennisShopSystem.DataTransferObjects.Product;
-    using Web.ViewModels.Product;
 
     public interface IProductService
     {
@@ -27,7 +26,7 @@
 
         Task<bool> IsSellerWithIdOwnerOfProductWithIdAsync(string productId, string sellerId);
 
-        Task EditProductByIdAndFormModelAsync(string productId, ProductFormModel formModel);
+        Task EditProductByIdAndFormModelAsync(string productId, ProductFormDto formModel);
 
         Task<ProductPreDeleteDetailsDto> GetProductForDeleteByIdAsync(string productId);
 
