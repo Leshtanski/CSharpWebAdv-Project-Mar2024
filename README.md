@@ -20,7 +20,7 @@ Inspiration & Resources:
 
 Lectures and Workshops by Stamo Petkov (February-April 2024) and Kristian Ivanov (June-July 2023) at SoftWare University.
 
-ASP.NET Core Template: The well-structured template by Nikolay Kostov served as a foundational base for this project.
+ASP.NET Core Template: The well-structured template by Nikolay Kostov, https://github.com/NikolayIT/ASP.NET-Core-Template.git, served as a foundational base for this project.
 
 Additional References:
 
