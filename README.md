@@ -20,7 +20,7 @@ Visual Studio 2022 ASP.NET Core Web App (Razor Pages) Template and .NET 6: Strea
 
 Lectures and Workshops by Stamo Petkov (February-April 2024) and Kristian Ivanov (June-July 2023) at SoftWare University.
 
-ASP.NET Core Template: The well-structured template by Nikolay Kostov, (https://github.com/NikolayIT/ASP.NET-Core-Template.git), served as a foundational base for this project.
+ASP.NET Core Template: The well-structured template by Nikolay Kostov (https://github.com/NikolayIT/ASP.NET-Core-Template.git) served as a foundational base for this project.
 
 #### Additional References:
 
